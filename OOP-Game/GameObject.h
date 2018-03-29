@@ -9,9 +9,20 @@
 struct Flags
 {
 	bool top;
-	bool right;
-	bool left;
-	bool bottom;
+
+	union {
+		struct {
+			bool right;
+			bool left;
+		}; 
+
+		bool sides;
+	};
+
+	union {
+		bool bottom;
+		bool grounded;
+	};
 };
 
 class TileMap;
