@@ -6,6 +6,8 @@
 #include <map>
 #include <string>
 
+class InputState;
+
 struct Flags
 {
 	bool top;
@@ -42,11 +44,10 @@ public:
 	void addAnimation(std::string name, std::vector<int> frames, int frameWidth, int frameHeight);
 	void play(std::string animationName);
 
-	virtual void update(float delta);
+	virtual void update() { }
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	virtual void collide(TileMap& tilemap) { }
-	void collide(GameObject& gameObject) { }
+	virtual void collide(GameObject* other) { }
 
 };
 
@@ -55,6 +56,10 @@ public:
 class Player : public GameObject
 {
 public:
+	const InputState* right;
+	const InputState* left;
+	const InputState* jump;
+
 	sf::Vector2f size;
 	sf::RectangleShape shape;
 	sf::Vector2f vel;
@@ -63,7 +68,7 @@ public:
 	Player();
 
 	float applyPhysics(float vel, float accel, float drag, float max);
-	void update(float delta);
+	void update();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	void collide(TileMap& tilemap);
+	void collide(GameObject* other);
 };

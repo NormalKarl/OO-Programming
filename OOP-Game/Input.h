@@ -26,23 +26,23 @@ public:
 		return m_state;
 	}
 
-	inline void setState(State state) {
-		m_state = state;
+	inline void setState(State _state) {
+		m_state = _state;
 	}
 
-	inline bool InputState::pressed() {
+	inline bool InputState::pressed() const {
 		return m_state == State::Pressed;
 	}
 
-	inline bool InputState::down() {
+	inline bool InputState::down() const {
 		return m_state == State::Pressed || m_state == State::Down;
 	}
 
-	inline bool InputState::released() {
+	inline bool InputState::released() const {
 		return m_state == State::Released;
 	}
 
-	inline bool InputState::up() {
+	inline bool InputState::up() const {
 		return m_state == State::Released || m_state == State::Up;
 	}
 
@@ -75,12 +75,12 @@ public:
 	void updateStates();
 	void event(sf::Event event);
 
-	inline InputState& Input::getState(sf::Keyboard::Key key) {
-		return m_keyStates[key];
+	inline const InputState* Input::getState(sf::Keyboard::Key key) {
+		return &m_keyStates[key];
 	}
 
-	inline InputState& Input::getState(sf::Mouse::Button button) {
-		return m_buttonStates[button];
+	inline const InputState* Input::getState(sf::Mouse::Button button) {
+		return &m_buttonStates[button];
 	}
 
 	inline bool pressed(sf::Keyboard::Key key) {

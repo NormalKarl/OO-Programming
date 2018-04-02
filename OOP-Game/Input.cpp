@@ -1,6 +1,8 @@
 #include "Input.h"
 #include "Game.h"
 
+Input* Input::s_input = NULL;
+
 void InputState::update() {
 	if (pressed()) {
 		setState(State::Down);
@@ -10,6 +12,7 @@ void InputState::update() {
 }
 
 Input::Input(const Game* _parent) : m_parent(_parent) {
+	s_input = this;
 	clear();
 }
 

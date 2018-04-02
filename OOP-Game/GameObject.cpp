@@ -6,8 +6,6 @@ GameObject::GameObject() {}
 
 GameObject::~GameObject() {}
 
-void GameObject::update(float delta) {}
-
 void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.transform *= getTransform();
 
@@ -16,6 +14,9 @@ void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 //Player
 Player::Player() {
+	jump = Input::getInput().getState(sf::Keyboard::Key::Space);
+	right = Input::getInput().getState(sf::Keyboard::Key::Right);
+	left = Input::getInput().getState(sf::Keyboard::Key::Left);
 	size = vel = {0, 0};
 	shape = sf::RectangleShape({32, 64});
 	shape.setPosition(0, 0);
@@ -23,12 +24,12 @@ Player::Player() {
 	grounded = false;
 }
 
-void Player::update(float delta) {
+void Player::update() {
 	float xAccel = 0;
 
-	/*if(InputDown(KeyRight)) {
+	if(right->down()) {
 		xAccel = 1;
-	} else if(InputDown(KeyLeft)) {
+	} else if(left->down()) {
 		xAccel = -1;
 	}
 
@@ -36,9 +37,12 @@ void Player::update(float delta) {
 
 	vel.y += 0.7f;
 
-	if(InputPressed(KeyJump) && grounded) {
+	if(jump->pressed() && grounded) {
 		vel.y = -10;
-	}*/
+	}
+
+	vel.x *= 0.016f;
+	vel.y *= 0.016f;
 }
 
 sf::FloatRect Grow(sf::FloatRect rect, sf::Vector2f direction) {
@@ -83,53 +87,60 @@ float Player::applyPhysics(float vel, float accel, float drag, float max) {
 	return vel;
 }
 
-void Player::collide(TileMap& tilemap) {
-	sf::FloatRect original = shape.getGlobalBounds();
-	sf::FloatRect broadRect = Grow(shape.getGlobalBounds(), vel);
-	sf::Vector2f newVel = {vel.x, vel.y};
+void Player::collide(GameObject* other) {
+	if (dynamic_cast<TileMap*>(other) != NULL) {
+		TileMap& tilemap = (TileMap&) *other;
 
-	int minX = floor(broadRect.left / tilemap.getTileSize());
-	int minY = floor(broadRect.top / tilemap.getTileSize());
-	int maxX = floor((broadRect.left + broadRect.width) / tilemap.getTileSize());
-	int maxY = floor((broadRect.top + broadRect.height) / tilemap.getTileSize());
+		sf::FloatRect original = shape.getGlobalBounds();
+		sf::FloatRect broadRect = Grow(shape.getGlobalBounds(), vel);
+		sf::Vector2f newVel = { vel.x, vel.y };
 
-	bool vertical = false, horizontal = false;
+		int minX = floor(broadRect.left / tilemap.getTileSize());
+		int minY = floor(broadRect.top / tilemap.getTileSize());
+		int maxX = floor((broadRect.left + broadRect.width) / tilemap.getTileSize());
+		int maxY = floor((broadRect.top + broadRect.height) / tilemap.getTileSize());
 
-	grounded = false;
+		bool vertical = false, horizontal = false;
 
-	for(int tileX = minX; tileX <= maxX; tileX++) {
-		for(int tileY = minY; tileY <= maxY; tileY++) {
-			if(tilemap.inBounds(tileX, tileY) && tilemap.isSolid(tileX, tileY)) {
-				sf::FloatRect tileBounds = tilemap.getTileBounds(tileX, tileY);
+		grounded = false;
 
-				if(broadRect.intersects(tileBounds)) {
-					if(!tilemap.isSolid(tileX, tileY + 1) && original.top >= tileBounds.top + tileBounds.height) {
-						newVel.y = (tileBounds.top + tileBounds.height) - original.top;
-						vertical = true;
-					} else if(!tilemap.isSolid(tileX, tileY - 1) && original.top + original.height <= tileBounds.top) {
-						newVel.y = tileBounds.top - (original.top + original.height);
-						grounded = true;
-						vertical = true;
-					} else if(!tilemap.isSolid(tileX + 1, tileY) && original.left >= tileBounds.left + tileBounds.width) {
-						newVel.x = (tileBounds.left + tileBounds.width) - original.left;
-						horizontal = true;
-					} else if(!tilemap.isSolid(tileX - 1, tileY) && original.left + original.width <= tileBounds.left) {
-						newVel.x = tileBounds.left - (original.left + original.width);
-						horizontal = true;
+		for (int tileX = minX; tileX <= maxX; tileX++) {
+			for (int tileY = minY; tileY <= maxY; tileY++) {
+				if (tilemap.inBounds(tileX, tileY) && tilemap.isSolid(tileX, tileY)) {
+					sf::FloatRect tileBounds = tilemap.getTileBounds(tileX, tileY);
+
+					if (broadRect.intersects(tileBounds)) {
+						if (!tilemap.isSolid(tileX, tileY + 1) && original.top >= tileBounds.top + tileBounds.height) {
+							newVel.y = (tileBounds.top + tileBounds.height) - original.top;
+							vertical = true;
+						}
+						else if (!tilemap.isSolid(tileX, tileY - 1) && original.top + original.height <= tileBounds.top) {
+							newVel.y = tileBounds.top - (original.top + original.height);
+							grounded = true;
+							vertical = true;
+						}
+						else if (!tilemap.isSolid(tileX + 1, tileY) && original.left >= tileBounds.left + tileBounds.width) {
+							newVel.x = (tileBounds.left + tileBounds.width) - original.left;
+							horizontal = true;
+						}
+						else if (!tilemap.isSolid(tileX - 1, tileY) && original.left + original.width <= tileBounds.left) {
+							newVel.x = tileBounds.left - (original.left + original.width);
+							horizontal = true;
+						}
 					}
 				}
 			}
 		}
+
+		if (vertical)
+			vel.y = 0;
+
+		if (horizontal)
+			vel.x = 0;
+
+		setPosition(getPosition() + newVel);
+		shape.setPosition(getPosition() - getOrigin());
 	}
-
-	if(vertical)
-		vel.y = 0;
-
-	if(horizontal)
-		vel.x = 0;
-
-	setPosition(getPosition() + newVel);
-	shape.setPosition(getPosition() - getOrigin());
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {

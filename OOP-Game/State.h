@@ -12,7 +12,19 @@ class Camera : public sf::View {
 private:
 	const GameObject* m_focused;
 public:
+	Camera() : sf::View() {}
 	Camera(const GameObject* _focused) : sf::View(), m_focused(_focused) {}
+
+	void update();
+
+	inline const GameObject* getFocused() {
+		return m_focused;
+	}
+
+	inline void setFocused(const GameObject* _focused) {
+		m_focused = _focused;
+	}
+
 };
 
 class State : public sf::Drawable

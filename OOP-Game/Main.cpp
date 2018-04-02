@@ -76,6 +76,7 @@ void entry() {
 	state->addGameObject(&player);
 
 	state->setCamera((Camera&)sf::View(sf::FloatRect(0, 0, 1280, 720)));
+	state->getCamera().setFocused(&player);
 
 	game.addState(state);
 	game.start();
