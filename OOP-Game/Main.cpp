@@ -4,8 +4,28 @@
 #include "Input.h"
 #include <math.h>
 
-int main() {
-	sf::RenderWindow window(sf::VideoMode(1280, 720), "Running");
+#include "Game.h"
+
+void startGame() {
+	Game game = Game("Game Title", 1280, 720);
+
+	game.start();
+}
+
+#ifdef _WIN32
+#include <Windows.h>
+
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+	startGame();
+	return 0;
+}
+#endif
+
+void main() {
+	startGame();
+
+
+	/*sf::RenderWindow window(sf::VideoMode(1280, 720), "Running");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
@@ -25,7 +45,6 @@ int main() {
 	Player player = Player();
 
 	window.setKeyRepeatEnabled(false);
-
 
 	while(window.isOpen()) {
 		UpdateInput(KeyRight);
@@ -69,7 +88,5 @@ int main() {
 		window.draw(map);
 		window.draw(player);
 		window.display();
-	}
-
-	return 0;
+	}*/
 }

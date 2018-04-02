@@ -26,7 +26,7 @@ Player::Player() {
 void Player::update(float delta) {
 	float xAccel = 0;
 
-	if(InputDown(KeyRight)) {
+	/*if(InputDown(KeyRight)) {
 		xAccel = 1;
 	} else if(InputDown(KeyLeft)) {
 		xAccel = -1;
@@ -38,7 +38,7 @@ void Player::update(float delta) {
 
 	if(InputPressed(KeyJump) && grounded) {
 		vel.y = -10;
-	}
+	}*/
 }
 
 sf::FloatRect Grow(sf::FloatRect rect, sf::Vector2f direction) {

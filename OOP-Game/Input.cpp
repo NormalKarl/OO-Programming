@@ -1,23 +1,52 @@
 #include "Input.h"
+#include "Game.h"
 
-InputState KeyRight = InputState::Up;
-InputState KeyLeft = InputState::Up;
-InputState KeyUp = InputState::Up;
-InputState KeyDown = InputState::Up;
-InputState KeyJump = InputState::Up;
-
-bool InputDown(InputState& inputState) {
-	return inputState == InputState::Pressed || inputState == InputState::Down;
+void InputState::update() {
+	if (pressed()) {
+		setState(State::Down);
+	} else if (released()) {
+		setState(State::Up);
+	}
 }
 
-bool InputPressed(InputState& inputState) {
-	return inputState == InputState::Pressed;
+Input::Input(const Game* _parent) : m_parent(_parent) {
+	clear();
 }
 
-void UpdateInput(InputState& inputState) {
-	if(inputState == InputState::Pressed) {
-		inputState = InputState::Down;
-	} else if(inputState == InputState::Released) {
-		inputState = InputState::Up;
+void Input::clear() {
+	std::fill_n(m_keyStates, sf::Keyboard::KeyCount, InputState::State::Up);
+	std::fill_n(m_buttonStates, sf::Mouse::ButtonCount, InputState::State::Up);
+	mouseX = 0;
+	mouseY = 0;
+	mouseXDelta = 0;
+	mouseYDelta = 0;
+	mouseWheel = 0;
+	mouseWheelDelta = 0;
+}
+
+void Input::updateStates() {
+	for (InputState& keyState : m_keyStates) {
+		keyState.update();
+	}
+
+	for (InputState& buttonState : m_buttonStates) {
+		buttonState.update();
+	}
+}
+
+void Input::event(sf::Event e) {
+	switch (e.type) {
+		case sf::Event::EventType::KeyPressed:
+			m_keyStates[e.key.code].setState(InputState::State::Pressed);
+			break;
+		case sf::Event::EventType::KeyReleased:
+			m_keyStates[e.key.code].setState(InputState::State::Released);
+			break;
+		case sf::Event::EventType::MouseButtonPressed:
+			m_buttonStates[e.mouseButton.button].setState(InputState::State::Pressed);
+			break;
+		case sf::Event::EventType::MouseButtonReleased:
+			m_buttonStates[e.mouseButton.button].setState(InputState::State::Released);
+			break;
 	}
 }
