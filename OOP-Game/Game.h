@@ -32,6 +32,10 @@ public:
 		return m_state;
 	}
 
+	inline const sf::View& getView() {
+		return m_window->getDefaultView();
+	}
+
 	bool hasState(State* state);
 	bool hasState(std::string name);
 	void addState(State* state);

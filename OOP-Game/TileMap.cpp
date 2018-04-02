@@ -1,7 +1,7 @@
 #include "TileMap.h"
 
 TileMap::TileMap(int mapWidth, int mapHeight, sf::Texture* texture, int cellSize, float tileSize)
-	: mapWidth(mapWidth), mapHeight(mapHeight), texture(texture), cellSize(cellSize), tileSize(tileSize) {
+	: GameObject(), mapWidth(mapWidth), mapHeight(mapHeight), texture(texture), cellSize(cellSize), tileSize(tileSize) {
 	mapVA = sf::VertexArray(sf::PrimitiveType::Triangles, mapWidth * mapHeight * 6);
 	collision = new bool[mapWidth * mapHeight];
 	std::fill_n(collision, mapWidth * mapHeight, 0);

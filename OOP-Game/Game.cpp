@@ -11,6 +11,8 @@ Game::Game(std::string _title, unsigned int _width, unsigned int _height) {
 	m_running = false;
 	m_input = new Input(this);
 	s_game = this;
+
+	m_state = NULL;
 }
 
 Game::~Game() {
@@ -88,12 +90,21 @@ bool Game::hasState(std::string name) {
 void Game::addState(State* state) {
 	if (!hasState(state)) {
 		m_states.push_back(state);
+
+		if (m_state == NULL) {
+			m_state = state;
+			printf("Info: Current state has not been set. Setting using parsed State.\n");
+		}
+
+		return;
 	}
+
+	printf("Error: State already exists.\n");
 }
 
 void Game::setState(State* state) {
 	if (!hasState(state)) {
-		printf("Warning: State doesn't already exist in Game. Adding...");
+		printf("Warning: State doesn't already exist in Game. Adding...\n");
 		m_states.push_back(state);
 	}
 
@@ -108,7 +119,7 @@ void Game::setState(std::string name) {
 		}
 	}
 
-	printf("Error: Couldn't find state with the name '%s'", name.c_str());
+	printf("Error: Couldn't find state with the name '%s'\n", name.c_str());
 }
 
 void Game::removeState(State* state) {
@@ -119,7 +130,7 @@ void Game::removeState(State* state) {
 		}
 	}
 
-	printf("Error: Couldn't remove state.");
+	printf("Error: Couldn't remove state.\n");
 }
 
 void Game::removeState(std::string name) {
@@ -130,5 +141,5 @@ void Game::removeState(std::string name) {
 		}
 	}
 
-	printf("Error: Couldn't remove state with the name '%s'", name.c_str());
+	printf("Error: Couldn't remove state with the name '%s'\n", name.c_str());
 }

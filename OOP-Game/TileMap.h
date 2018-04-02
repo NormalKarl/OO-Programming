@@ -2,7 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
-class TileMap : public sf::Drawable {
+#include "GameObject.h"
+
+class TileMap : public GameObject {
 private:
 	sf::Texture* texture;
 	int cellSize;
