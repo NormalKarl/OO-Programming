@@ -33,16 +33,13 @@ void Player::update() {
 		xAccel = -1;
 	}
 
-	vel.x = applyPhysics(vel.x, xAccel, 0.3, 5);
+	vel.x = applyPhysics(vel.x, xAccel, 0.3f, 5.0f);
 
 	vel.y += 0.7f;
 
 	if(jump->pressed() && grounded) {
 		vel.y = -10;
 	}
-
-	vel.x *= 0.016f;
-	vel.y *= 0.016f;
 }
 
 sf::FloatRect Grow(sf::FloatRect rect, sf::Vector2f direction) {
@@ -95,10 +92,10 @@ void Player::collide(GameObject* other) {
 		sf::FloatRect broadRect = Grow(shape.getGlobalBounds(), vel);
 		sf::Vector2f newVel = { vel.x, vel.y };
 
-		int minX = floor(broadRect.left / tilemap.getTileSize());
-		int minY = floor(broadRect.top / tilemap.getTileSize());
-		int maxX = floor((broadRect.left + broadRect.width) / tilemap.getTileSize());
-		int maxY = floor((broadRect.top + broadRect.height) / tilemap.getTileSize());
+		int minX = (int)floor(broadRect.left / tilemap.getTileSize());
+		int minY = (int)floor(broadRect.top / tilemap.getTileSize());
+		int maxX = (int)floor((broadRect.left + broadRect.width) / tilemap.getTileSize());
+		int maxY = (int)floor((broadRect.top + broadRect.height) / tilemap.getTileSize());
 
 		bool vertical = false, horizontal = false;
 

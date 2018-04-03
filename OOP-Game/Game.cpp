@@ -32,6 +32,8 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 void Game::start() {
 	m_window = new sf::RenderWindow(m_videoMode, m_title);
+	m_window->setFramerateLimit(60);
+	m_window->setVerticalSyncEnabled(true);
 	m_window->setKeyRepeatEnabled(false);
 	m_running = true;
 	m_input->clear();
@@ -42,14 +44,11 @@ void Game::start() {
 		sf::Event e;
 
 		while (m_window->pollEvent(e)) {
-			//TODO Add all the other events here.
-			//Parse off the input events to the Input object.
 			switch (e.type) {
 				case sf::Event::Closed:
 					m_running = false;
 					break;
 				//Parse of all of the Input related events to Input.
-				case sf::Event::TextEntered:
 				case sf::Event::KeyPressed:
 				case sf::Event::KeyReleased:
 				case sf::Event::MouseButtonPressed:
@@ -60,6 +59,9 @@ void Game::start() {
 				case sf::Event::MouseLeft:
 					m_input->event(e);
 					break;
+				/*case sf::Event::TextEntered:
+					printf("%c", e.text.unicode);
+					break;*/
 			}
 		}
 
