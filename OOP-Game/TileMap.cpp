@@ -27,6 +27,7 @@ void TileMap::setTile(int cellX, int cellY, int tileX, int tileY, bool solid) {
 
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.texture = texture;
+	states.transform *= getTransform();
 	target.draw(mapVA, states);
 }
 

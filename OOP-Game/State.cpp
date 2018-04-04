@@ -41,5 +41,6 @@ void State::draw(sf::RenderTarget& _target, sf::RenderStates _states) const {
 }
 
 void State::addGameObject(GameObject* object) {
+	object->m_parent = this;
 	m_gameObjects.push_back(object);
 }

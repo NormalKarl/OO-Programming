@@ -145,3 +145,7 @@ void Game::removeState(std::string name) {
 
 	printf("Error: Couldn't remove state with the name '%s'\n", name.c_str());
 }
+
+float Game::getDelta() {
+	return 60.0f / 1000.0f;
+}

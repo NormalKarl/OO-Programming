@@ -2,6 +2,8 @@
 //test
 #include <sfml/graphics.hpp>
 
+class GameObject;
+
 //Instance of Axis is used for 
 struct Axis {
 	sf::Vector2f v1;
@@ -11,6 +13,9 @@ struct Axis {
 class Collider
 {
 private:
+	friend class GameObject;
+	const GameObject* m_parent;
+
 	sf::Vector2f m_origin;
 	sf::Vector2f m_position;
 	float m_rotation;

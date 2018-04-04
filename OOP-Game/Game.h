@@ -43,6 +43,7 @@ public:
 	void setState(std::string name);
 	void removeState(State* state);
 	void removeState(std::string name);
+	float getDelta();
 
 	static Game* getGame() {
 		return s_game;

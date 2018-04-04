@@ -4,42 +4,54 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Collider.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
     <ClCompile Include="State.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collider.h">
+    <ClInclude Include="TileMap.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Headers\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Engine</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Headers\Engine</Filter>
     </ClInclude>
     <ClInclude Include="State.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="TileMap.h">
+    <ClInclude Include="Player.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -49,6 +61,12 @@
     </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{6a77a0d8-15a7-4c7a-ae8d-b372863704a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Engine">
+      <UniqueIdentifier>{51e3c6c7-de0a-468e-bbf6-c619183850fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine">
+      <UniqueIdentifier>{cf0ed005-a439-487d-85d1-afd71f6dcb9d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
