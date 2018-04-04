@@ -2,6 +2,8 @@
 
 #include <SFMl/Graphics.hpp>
 
+class BitmapFont;
+
 class Updatable {
 public:
 	virtual void update() = 0;
@@ -24,6 +26,24 @@ public:
 	Animation(const sf::Texture* texture, std::vector<sf::IntRect> frames, float speed);
 	void update();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+};
+
+class Label : public Graphic {
+private:
+	const BitmapFont* font;
+	sf::VertexArray va;
+	std::string text;
+public:
+	Label(const BitmapFont* font, std::string text);
+	virtual ~Label();
+
+	inline std::string getText() const {
+		return text;
+	}
+
+	void setText(std::string text);
+	virtual void update() { }
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
 /*class TileMap : public sf::Transformable, public sf::Drawable {

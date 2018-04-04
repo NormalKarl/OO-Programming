@@ -28,6 +28,12 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="BitmapFont.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -53,6 +59,12 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapFont.h">
+      <Filter>Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>Headers\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
