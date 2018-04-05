@@ -42,7 +42,7 @@ public:
 	}
 
 	void setText(std::string text);
-	virtual void update() { }
+	virtual void update();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 

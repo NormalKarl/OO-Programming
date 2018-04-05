@@ -66,6 +66,9 @@
     <ClInclude Include="tinyxml2.h">
       <Filter>Headers\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Headers\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

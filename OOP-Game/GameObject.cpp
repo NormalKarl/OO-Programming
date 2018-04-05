@@ -10,8 +10,8 @@ GameObject::~GameObject() {}
 
 void GameObject::update() {
 	for (const sf::Drawable* drawable : m_graphics) {
-		if (dynamic_cast<const Updatable*>(drawable) != NULL) {
-			((Updatable*)drawable)->update();
+		if (dynamic_cast<const Graphic*>(drawable) != NULL) {
+			((Graphic*)drawable)->update();
 		}
 	}
 }

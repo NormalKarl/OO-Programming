@@ -29,6 +29,7 @@ void Animation::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 Label::Label(const BitmapFont* font, std::string text) {
 	this->font = font;
 	va = sf::VertexArray(sf::PrimitiveType::Quads);
+	setText(text);
 }
 
 Label::~Label() {
@@ -53,11 +54,15 @@ void Label::setText(std::string text)  {
 
 		currentX += bc.xadvance;
 
-		va.append({ { charX, charY }, { bc.uvX, bc.uvY } });
-		va.append({ { charX + bc.width, charY }, { bc.uvX + bc.uvWidth, bc.uvY } });
-		va.append({ { charX + bc.width, charY + bc.height }, { bc.uvX + bc.uvWidth, bc.uvY + bc.uvHeight } });
-		va.append({ { charX, charY + bc.height }, { bc.uvX, bc.uvY + bc.uvHeight } });
+		va.append({ { charX, charY },{ (float)bc.x, (float)bc.y } });
+		va.append({ { charX + bc.width, charY },{ (float)bc.x + bc.width, (float)bc.y } });
+		va.append({ { charX + bc.width, charY + bc.height },{ (float)bc.x + bc.width, (float)bc.y + bc.height } });
+		va.append({ { charX, charY + bc.height },{ (float)bc.x, (float)bc.y + bc.height } });
 	}
+}
+
+void Label::update() {
+
 }
 
 void Label::draw(sf::RenderTarget& target, sf::RenderStates states) const {

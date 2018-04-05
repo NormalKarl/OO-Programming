@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "Input.h"
 #include "TileMap.h"
+#include "Graphics.h"
+#include "BitmapFont.h"
 
 struct Flags
 {
@@ -31,6 +33,9 @@ Player::Player() {
 	hitbox = { 32.0f, 64.0f };
 	shape.setFillColor(sf::Color::White);
 	grounded = false;
+
+	BitmapFont* font = new BitmapFont("assets/font.fnt", { "assets/font_0.png" });
+	addGraphic(new Label(font, "Hello, World"));
 
 	addGraphic(&shape);
 }

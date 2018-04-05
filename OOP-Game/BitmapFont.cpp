@@ -51,14 +51,16 @@ BitmapFont::BitmapFont(const char* filename, std::vector<std::string> pagePaths)
 
 	tinyxml2::XMLElement* kerningsElement = doc.FirstChildElement("font")->FirstChildElement("kernings");
 
-	for (tinyxml2::XMLElement* c = (tinyxml2::XMLElement*)kerningsElement->FirstChild(); c != NULL; c = (tinyxml2::XMLElement*)c->NextSibling()) {
-		Kerning k = { 0 };
+	if (kerningsElement != NULL) {
+		for (tinyxml2::XMLElement* c = (tinyxml2::XMLElement*)kerningsElement->FirstChild(); c != NULL; c = (tinyxml2::XMLElement*)c->NextSibling()) {
+			Kerning k = { 0 };
 
-		k.first = c->IntAttribute("first");
-		k.second = c->IntAttribute("second");
-		k.amount = c->IntAttribute("amount");
+			k.first = c->IntAttribute("first");
+			k.second = c->IntAttribute("second");
+			k.amount = c->IntAttribute("amount");
 
-		kerning[k.second].push_back(k);
+			kerning[k.second].push_back(k);
+		}
 	}
 
 	return;
