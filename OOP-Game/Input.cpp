@@ -19,10 +19,6 @@ Input::Input(const Game* _parent) : m_parent(_parent) {
 void Input::clear() {
 	std::fill_n(m_keyStates, sf::Keyboard::KeyCount, InputState::State::Up);
 	std::fill_n(m_buttonStates, sf::Mouse::ButtonCount, InputState::State::Up);
-	mouseX = 0;
-	mouseY = 0;
-	mouseXDelta = 0;
-	mouseYDelta = 0;
 	mouseWheel = 0;
 	mouseWheelDelta = 0;
 }
@@ -50,6 +46,11 @@ void Input::event(sf::Event e) {
 			break;
 		case sf::Event::EventType::MouseButtonReleased:
 			m_buttonStates[e.mouseButton.button].setState(InputState::State::Released);
+			break;
+		case sf::Event::EventType::MouseMoved:
+			sf::Vector2i tempMousePos = mousePos;
+			mousePos = { e.mouseMove.x, e.mouseMove.y };
+			mouseDelta = mousePos - tempMousePos;
 			break;
 	}
 }

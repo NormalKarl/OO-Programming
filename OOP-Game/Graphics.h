@@ -33,12 +33,26 @@ private:
 	const BitmapFont* font;
 	sf::VertexArray va;
 	std::string text;
+	sf::Vector2f m_labelSize;
 public:
+	Label() {}
 	Label(const BitmapFont* font, std::string text);
 	virtual ~Label();
 
 	inline std::string getText() const {
 		return text;
+	}
+
+	inline float getLabelWidth() {
+		return m_labelSize.x;
+	}
+
+	inline float getLabelHeight() {
+		return m_labelSize.y;
+	}
+
+	inline sf::Vector2f getLabelSize() {
+		return m_labelSize;
 	}
 
 	void setText(std::string text);

@@ -62,10 +62,8 @@ private:
 	const Game* m_parent;
 	InputState m_keyStates[sf::Keyboard::KeyCount];
 	InputState m_buttonStates[sf::Mouse::ButtonCount];
-	int mouseX;
-	int mouseY;
-	int mouseXDelta;
-	int mouseYDelta;
+	sf::Vector2i mousePos;
+	sf::Vector2i mouseDelta;
 	int mouseWheel;
 	int mouseWheelDelta;
 public:
@@ -115,7 +113,27 @@ public:
 		return m_buttonStates[button].up();
 	}
 
-	inline static Input& getInput() {
+	inline static Input& GetInput() {
 		return *Input::s_input;
+	}
+
+	inline static const InputState* Input::GetState(sf::Keyboard::Key key) {
+		return &(GetInput().m_keyStates[key]);
+	}
+
+	inline static const InputState* Input::GetState(sf::Mouse::Button button) {
+		return &(GetInput().m_buttonStates[button]);
+	}
+
+	inline static sf::Vector2i GetMousePos() {
+		return s_input->mousePos;
+	}
+
+	inline static int GetMouseX() {
+		return s_input->mousePos.x;
+	}
+
+	inline static int GetMouseY() {
+		return s_input->mousePos.y;
 	}
 };

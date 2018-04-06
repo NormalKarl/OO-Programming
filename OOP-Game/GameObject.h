@@ -9,21 +9,30 @@
 class State;
 class Collider;
 
+/*
+GameObject class holds only a very few general features.
+It will be able to hold a list of sf::Drawable pointers which will
+hold all the related graphics. It also has an Axis-Aligned Bounding Box (AABB)
+which will be used to check for intersections against other GameObject's.
+GameObject also inherits sf::Transformable (Abstract Class)
+and sf::Drawable (Interface). sf::Transformable defines the position, origin,
+scale and rotation of the GameObject, which produces a matrix for graphics manipulation.
+
+Buttons are a good example of having an AABB and a graphic for the button.
+*/
 class GameObject : public sf::Transformable, public sf::Drawable {
 private:
 	friend class State;
 	const State* m_parent;
-
+	//std::vector<const Camera*> m_cameras; //These are the cameras in which this object will be drawn.
 	std::vector<const sf::Drawable*> m_graphics;
-	std::vector<Collider*> m_colliders;
+	sf::Vector2f aabb;
+	sf::Vector2f aabbOrigin;
+
+	bool m_relativeToView;
 public:
 	GameObject();
 	~GameObject();
-
-	virtual void update();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	
-	virtual void collide(GameObject* other) { }
 
 	//Returned the first graphic.
 	const sf::Drawable* getGraphic();
@@ -33,14 +42,19 @@ public:
 	std::vector<const sf::Drawable*>* getGraphics();
 	void addGraphic(const sf::Drawable* _graphic);
 
-	//Returns the first collider in the m_colliders list.
-	//Useful if GameObject only uses 1 collider (which is often the case).
-	Collider* getCollider();
-	void setCollider(Collider* collider);
-	std::vector<Collider*>* getColliders();
-	void addCollider(Collider* collider);
+	sf::FloatRect getBoundingBox();
+	void setBoundingBox(float width, float height, float originX = 0, float originY = 0);
+	virtual bool intersect(sf::Vector2f point);
+	virtual bool intersect(GameObject* other);
+	virtual bool intersect(sf::Vector2i point);
+	virtual void update();
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	//Helpful builder functions.
-	void setHitbox(float width, float height, float offsetX = 0, float offsetY = 0);
+	inline bool isRelativeToView() {
+		return m_relativeToView;
+	}
 
+	inline void setRelativeToView(bool _relativeToView) {
+		this->m_relativeToView = _relativeToView;
+	}
 };

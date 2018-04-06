@@ -7,9 +7,6 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Collider.cpp">
-      <Filter>Source\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
@@ -34,13 +31,13 @@
     <ClCompile Include="tinyxml2.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
       <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Collider.h">
-      <Filter>Headers\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Headers\Engine</Filter>
@@ -69,6 +66,9 @@
     <ClInclude Include="Engine.h">
       <Filter>Headers\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Headers\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -76,12 +76,19 @@
     </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{6a77a0d8-15a7-4c7a-ae8d-b372863704a4}</UniqueIdentifier>
+      <Extensions>.cpp;.c;</Extensions>
     </Filter>
     <Filter Include="Headers\Engine">
       <UniqueIdentifier>{51e3c6c7-de0a-468e-bbf6-c619183850fd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Engine">
       <UniqueIdentifier>{cf0ed005-a439-487d-85d1-afd71f6dcb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\UI">
+      <UniqueIdentifier>{e293ab84-ed24-4f4c-9246-badc3dba4904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI">
+      <UniqueIdentifier>{fd598c47-4bdf-4d00-b2de-960181cd03d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

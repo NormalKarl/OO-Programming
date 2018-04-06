@@ -11,6 +11,8 @@ class Game;
 class Camera : public sf::View {
 private:
 	const GameObject* m_focused;
+
+	int m_depth;
 public:
 	Camera() : sf::View() {}
 	Camera(const GameObject* _focused) : sf::View(), m_focused(_focused) {}
@@ -35,11 +37,11 @@ private:
 
 	std::string m_name;
 	std::vector<GameObject*> m_gameObjects;
-	Camera m_camera;
+	std::vector<Camera*> m_cameras;
 public:
 	State(std::string name = "");
 	~State();
-	void update();
+	virtual void update();
 	virtual void draw(sf::RenderTarget& _target, sf::RenderStates _states) const;
 
 	void addGameObject(GameObject* object);
@@ -48,13 +50,11 @@ public:
 		return m_name;
 	}
 
-	inline Camera& getCamera() {
-		return m_camera;
+	inline Camera& getCamera() const {
+		return *m_cameras[0];
 	}
 
-	inline void setCamera(const Camera& _camera) {
-		this->m_camera = _camera;
-	}
+	void setCamera(Camera* camera);
 };
 
 

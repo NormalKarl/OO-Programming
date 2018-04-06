@@ -24,18 +24,19 @@ struct Flags
 };
 
 //Player
-Player::Player() {
-	jump = Input::getInput().getState(sf::Keyboard::Key::Space);
-	right = Input::getInput().getState(sf::Keyboard::Key::Right);
-	left = Input::getInput().getState(sf::Keyboard::Key::Left);
+Player::Player(TileMap* map) {
+	this->map = map;
+	jump = Input::GetState(sf::Keyboard::Key::Space);
+	right = Input::GetState(sf::Keyboard::Key::Right);
+	left = Input::GetState(sf::Keyboard::Key::Left);
 	size = vel = { 0, 0 };
 	shape = sf::RectangleShape({ 32, 64 });
 	hitbox = { 32.0f, 64.0f };
 	shape.setFillColor(sf::Color::White);
 	grounded = false;
 
-	BitmapFont* font = new BitmapFont("assets/font.fnt", { "assets/font_0.png" });
-	addGraphic(new Label(font, "Hello, World"));
+	//BitmapFont* font = new BitmapFont("assets/font.fnt", { "assets/font_0.png" });
+	//addGraphic(new Label(font, "Hello, World"));
 
 	addGraphic(&shape);
 }
@@ -58,6 +59,8 @@ void Player::update() {
 	if (jump->pressed() && grounded) {
 		vel.y = -10;
 	}
+
+	collide(map);
 }
 
 sf::FloatRect Grow(sf::FloatRect rect, sf::Vector2f direction) {
@@ -114,7 +117,9 @@ void Player::collide(GameObject* other) {
 	if (dynamic_cast<TileMap*>(other) != NULL) {
 		TileMap& tilemap = (TileMap&)*other;
 
-		sf::FloatRect original = sf::FloatRect(getPosition().x - getOrigin().x, getPosition().y - getOrigin().y, hitbox.x, hitbox.y);
+		sf::Vector2f pos = getPosition() - getOrigin();
+
+		sf::FloatRect original = sf::FloatRect(pos.x, pos.y, hitbox.x, hitbox.y);
 		sf::FloatRect broadRect = Grow(original, vel);
 
 		int minX = (int)floor(broadRect.left / tilemap.getTileSize());

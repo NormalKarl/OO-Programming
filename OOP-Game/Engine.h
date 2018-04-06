@@ -5,6 +5,5 @@
 #include "State.h"
 #include "GameObject.h"
 #include "Graphics.h"
-#include "Collider.h"
 #include "BitmapFont.h"
 #include "tinyxml2.h"

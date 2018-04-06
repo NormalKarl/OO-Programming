@@ -42,7 +42,8 @@ void Label::setText(std::string text)  {
 		const BitmapChar bc = font->getChars()[text[c]];
 
 		float charX = currentX + bc.xoffset;
-		float charY = (font->getLineHeight() + font->getBase()) + bc.yoffset;
+		float charY = bc.yoffset;
+		//(font->getLineHeight() + font->getBase())
 
 		if (font->getKernings()[c].size() != 0 && c != 0) {
 			for (int k = 0; k < font->getKernings()[c].size(); k++) {
@@ -59,6 +60,8 @@ void Label::setText(std::string text)  {
 		va.append({ { charX + bc.width, charY + bc.height },{ (float)bc.x + bc.width, (float)bc.y + bc.height } });
 		va.append({ { charX, charY + bc.height },{ (float)bc.x, (float)bc.y + bc.height } });
 	}
+
+	m_labelSize = { currentX, (float)font->getLineHeight() };
 }
 
 void Label::update() {

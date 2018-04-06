@@ -16,6 +16,7 @@ private:
 
 	bool* collision;
 public:
+	TileMap() {}
 	TileMap(int mapWidth, int mapHeight, sf::Texture* texture, int cellSize, float tileSize = 16.0f);
 	~TileMap();
 

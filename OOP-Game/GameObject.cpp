@@ -2,9 +2,10 @@
 #include "Input.h"
 #include "TileMap.h"
 #include "Graphics.h"
-#include "Collider.h"
 
-GameObject::GameObject() {}
+GameObject::GameObject() {
+	m_relativeToView = true;
+}
 
 GameObject::~GameObject() {}
 
@@ -17,10 +18,22 @@ void GameObject::update() {
 }
 
 void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	const sf::View& v = target.getView();
+
+	if (!m_relativeToView) {
+		sf::View v2 = v;
+		v2.setCenter(v2.getSize() / 2.0f);
+		target.setView(v2);
+	}
+
 	states.transform *= getTransform();
 
 	for (const sf::Drawable* drawable : m_graphics) {
 		target.draw(*drawable, states);
+	}
+
+	if (!m_relativeToView) {
+		target.setView(v);
 	}
 }
 
@@ -43,23 +56,26 @@ void GameObject::addGraphic(const sf::Drawable* _graphic) {
 	m_graphics.push_back(_graphic);
 }
 
-Collider* GameObject::getCollider() {
-	return m_colliders.size() != 0 ? m_colliders[0] : NULL;
+void GameObject::setBoundingBox(float width, float height, float originX, float originY) {
+	aabb = { width, height };
+	aabbOrigin = { originX, originY };
 }
 
-void GameObject::setCollider(Collider* collider) {
-	if (m_colliders.empty())
-		m_colliders.resize(1);
-
-	collider->m_parent = this;
-	m_colliders[0] = collider;
+sf::FloatRect GameObject::getBoundingBox() {
+	return sf::FloatRect(getPosition() - aabbOrigin, aabb);
 }
 
-std::vector<Collider*>* GameObject::getColliders() {
-	return &m_colliders;
+bool GameObject::intersect(sf::Vector2i point) {
+	return intersect((sf::Vector2f)point);
 }
 
-void GameObject::addCollider(Collider* collider) {
-	collider->m_parent = this;
-	m_colliders.push_back(collider);
+bool GameObject::intersect(sf::Vector2f point) {
+	sf::FloatRect boundingBox = getBoundingBox();
+
+	return (point.x >= boundingBox.left && point.x < boundingBox.left + boundingBox.width)
+		&& (point.y >= boundingBox.top && point.y < boundingBox.top + boundingBox.height);
+}
+
+bool GameObject::intersect(GameObject* other) {
+	return getBoundingBox().intersects(other->getBoundingBox());
 }

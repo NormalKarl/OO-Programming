@@ -22,18 +22,11 @@ void State::update() {
 		gameObject->update();
 	}
 
-	for (GameObject* a : m_gameObjects) {
-		for (GameObject* b : m_gameObjects) {
-			if(a != b)
-				a->collide(b);
-		}
-	}
-
-	m_camera.update();
+	getCamera().update();
 }
 
 void State::draw(sf::RenderTarget& _target, sf::RenderStates _states) const {
-	_target.setView(m_camera);
+	_target.setView(getCamera());
 
 	for (GameObject* gameObject : m_gameObjects) {
 		_target.draw(*gameObject, _states);
@@ -43,4 +36,11 @@ void State::draw(sf::RenderTarget& _target, sf::RenderStates _states) const {
 void State::addGameObject(GameObject* object) {
 	object->m_parent = this;
 	m_gameObjects.push_back(object);
+}
+
+void State::setCamera(Camera* camera) {
+	if (m_cameras.empty())
+		m_cameras.resize(1);
+
+	m_cameras[0] = camera;
 }
