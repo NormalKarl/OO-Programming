@@ -1,4 +1,4 @@
-#include "BitmapFont.h"
+#include "Resources.h"
 
 #include <fstream>
 #include <sstream>
@@ -73,15 +73,78 @@ BitmapFont::~BitmapFont()
 
 
 int BitmapFont::getWidth(const std::string& text) {
-	float currentX = 0;
+	int currentX = 0;
 
-	for (int c = 0; c < text.size(); c++) {
+	for (int c = 0; c < (int)text.size(); c++) {
 		BitmapChar bc = chars[text[c]];
 
 		currentX += bc.xadvance;
 	}
 
 	return currentX;
+}
+
+
+sf::Sprite* SpriteData::makeSprite() const {
+	sf::Sprite* sprite = new sf::Sprite();
+	sprite->setTexture(spriteSheet->getTexture());
+	sprite->setTextureRect(rect);
+	sprite->setOrigin(origin);
+	return sprite;
+}
+
+SpriteSheet::SpriteSheet(const char* xmlSheet) {
+	using namespace tinyxml2;
+	XMLDocument doc;
+	doc.LoadFile(xmlSheet);
+
+	XMLElement* mainEle = doc.FirstChildElement("SpriteSheet");
+
+	texture = new sf::Texture();
+	texture->loadFromFile(mainEle->Attribute("Source"));
+
+	for (XMLElement* c = (XMLElement*)mainEle->FirstChild(); c != NULL; c = (XMLElement*)c->NextSibling()) {
+		if (strcmp(c->Name(), "Sprite") == 0) {
+			SpriteData data;
+
+
+			data.spriteSheet = this;
+			data.name = std::string(c->Attribute("Name"));
+
+			c->QueryAttribute("X", &data.x);
+			c->QueryAttribute("Y", &data.y);
+			c->QueryAttribute("Width", &data.width);
+			c->QueryAttribute("Height", &data.height);
+			c->QueryAttribute("OriginX", &data.originX);
+			c->QueryAttribute("OriginY", &data.originY);
+
+			m_sprites.push_back(data);
+		}
+	}
+}
+
+const SpriteData* SpriteSheet::getSpriteData(std::string name) const {
+	for (int i = 0; i < (int)m_sprites.size(); i++) {
+		if (m_sprites[i].name == name) {
+			return &m_sprites[i];
+		}
+	}
+
+	return NULL;
+}
+
+sf::Sprite* SpriteSheet::makeSprite(std::string name) {
+	const SpriteData* spr = getSpriteData(name);
+
+	if (spr != NULL) {
+		return spr->makeSprite();
+	}
+
+	return NULL;
+}
+
+SpriteSheet::~SpriteSheet() {
+	delete texture;
 }
 
 /*void BitmapFont::drawText(Rasterizer* rasterizer, std::string text, float x, float y) {

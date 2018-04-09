@@ -1,6 +1,6 @@
 #include "Graphics.h"
 #include "Game.h"
-#include "BitmapFont.h"
+#include "Resources.h"
 
 Animation::Animation(const sf::Texture* texture, std::vector<sf::IntRect> frames, float speed) : m_speed(speed) {
 	for (sf::IntRect rect : frames) {
@@ -38,7 +38,7 @@ Label::~Label() {
 void Label::setText(std::string text)  {
 	float currentX = 0;
 
-	for (int c = 0; c < text.size(); c++) {
+	for (int c = 0; c < (int)text.size(); c++) {
 		const BitmapChar bc = font->getChars()[text[c]];
 
 		float charX = currentX + bc.xoffset;
@@ -46,7 +46,7 @@ void Label::setText(std::string text)  {
 		//(font->getLineHeight() + font->getBase())
 
 		if (font->getKernings()[c].size() != 0 && c != 0) {
-			for (int k = 0; k < font->getKernings()[c].size(); k++) {
+			for (int k = 0; k < (int)font->getKernings()[c].size(); k++) {
 				if (font->getKernings()[c][k].first == text[c - 1]) {
 					charX += font->getKernings()[c][k].amount;
 				}

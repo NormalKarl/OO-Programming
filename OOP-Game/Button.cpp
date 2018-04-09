@@ -2,6 +2,7 @@
 
 Button::Button(float x, float y, const BitmapFont* font, std::string text)
 {
+	buttonType = LabelButton;
 	sf::Vector2f padding = { 10, 10 };
 	setPosition(x, y);
 	m_label = Label(font, text);
@@ -16,6 +17,17 @@ Button::Button(float x, float y, const BitmapFont* font, std::string text)
 	addGraphic(&shape);
 	addGraphic(&m_label);
 
+	setRelativeToView(false);
+}
+
+Button::Button(const SpriteData* texture) {
+	buttonType = TextureButton;
+
+	spr = texture->makeSprite();
+
+	setBoundingBox((float)texture->width, (float)texture->height);
+
+	addGraphic(spr);
 	setRelativeToView(false);
 }
 

@@ -15,6 +15,9 @@ private:
 	float tileSize;
 
 	bool* collision;
+
+	bool gridVisible;
+	sf::VertexArray gridVA;
 public:
 	TileMap() {}
 	TileMap(int mapWidth, int mapHeight, sf::Texture* texture, int cellSize, float tileSize = 16.0f);
@@ -43,5 +46,13 @@ public:
 
 	inline float getTileSize() {
 		return tileSize;
+	}
+
+	inline bool isGridVisible() {
+		return gridVisible;
+	}
+
+	inline void setGridVisible(bool gridVisible) {
+		this->gridVisible = gridVisible;
 	}
 };

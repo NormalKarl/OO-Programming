@@ -5,5 +5,5 @@
 #include "State.h"
 #include "GameObject.h"
 #include "Graphics.h"
-#include "BitmapFont.h"
+#include "Resources.h"
 #include "tinyxml2.h"

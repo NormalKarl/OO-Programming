@@ -31,6 +31,8 @@ void Input::updateStates() {
 	for (InputState& buttonState : m_buttonStates) {
 		buttonState.update();
 	}
+
+	mouseDelta = { 0, 0 };
 }
 
 void Input::event(sf::Event e) {

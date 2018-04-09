@@ -2,18 +2,32 @@
 #include "Input.h"
 #include "TileMap.h"
 #include "Graphics.h"
+#include "State.h"
 
-GameObject::GameObject() {
+GameObject::GameObject(bool _persistent) {
+	m_state = NULL;
+	m_parent = NULL;
 	m_relativeToView = true;
+	m_depth = 0;
+	m_persistent = _persistent;
 }
 
-GameObject::~GameObject() {}
+GameObject::~GameObject() {
+	for (size_t i = 0; i < m_children.size(); i++) {
+		if (!m_children[i]->isPersistent())
+			delete m_children[i];
+	}
+}
 
 void GameObject::update() {
 	for (const sf::Drawable* drawable : m_graphics) {
 		if (dynamic_cast<const Graphic*>(drawable) != NULL) {
 			((Graphic*)drawable)->update();
 		}
+	}
+
+	for (GameObject* child : m_children) {
+		child->update();
 	}
 }
 
@@ -30,6 +44,10 @@ void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	for (const sf::Drawable* drawable : m_graphics) {
 		target.draw(*drawable, states);
+	}
+
+	for (GameObject* child : m_children) {
+		target.draw(*child, states);
 	}
 
 	if (!m_relativeToView) {
@@ -56,6 +74,12 @@ void GameObject::addGraphic(const sf::Drawable* _graphic) {
 	m_graphics.push_back(_graphic);
 }
 
+
+void GameObject::addChild(GameObject* _child) {
+	m_children.push_back(_child);
+	_child->m_parent = this;
+}
+
 void GameObject::setBoundingBox(float width, float height, float originX, float originY) {
 	aabb = { width, height };
 	aabbOrigin = { originX, originY };
@@ -78,4 +102,12 @@ bool GameObject::intersect(sf::Vector2f point) {
 
 bool GameObject::intersect(GameObject* other) {
 	return getBoundingBox().intersects(other->getBoundingBox());
+}
+
+void GameObject::setDepth(int depth) {
+	this->m_depth = depth;
+
+	if (m_state != NULL) {
+		m_state->reorder();
+	}
 }

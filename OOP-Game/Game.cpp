@@ -92,6 +92,7 @@ bool Game::hasState(std::string name) {
 void Game::addState(State* state) {
 	if (!hasState(state)) {
 		m_states.push_back(state);
+		state->m_game = this;
 
 		if (m_state == NULL) {
 			m_state = state;

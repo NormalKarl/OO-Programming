@@ -70,3 +70,49 @@ public:
 	int getWidth(const std::string& text);
 };
 
+class SpriteSheet;
+
+struct SpriteData {
+	const SpriteSheet* spriteSheet;
+	std::string name;
+
+	//Very clever indeed
+	union {
+		struct {
+			int x;
+			int y;
+			int width;
+			int height;
+		};
+
+		sf::IntRect rect;
+	};
+
+	union {
+		struct {
+			float originX;
+			float originY;
+		};
+
+		sf::Vector2f origin;
+	};
+
+	SpriteData() : x(0), y(0), width(0), height(0), originX(0.0f), originY(0.0f) { }
+	sf::Sprite* makeSprite() const;
+};
+
+class SpriteSheet {
+private:
+	sf::Texture* texture;
+	std::vector<SpriteData> m_sprites;
+public:
+	SpriteSheet(const char* xmlSheet);
+	virtual ~SpriteSheet();
+
+	inline const sf::Texture& getTexture() const {
+		return *texture;
+	}
+
+	const SpriteData* getSpriteData(std::string name) const;
+	sf::Sprite* makeSprite(std::string name);
+};

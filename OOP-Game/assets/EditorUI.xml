@@ -1,0 +1,8 @@
+<SpriteSheet Source="assets/EditorUI.png">
+	<Sprite Name="ToolbarContainer" X="0" Y="0" Width="18" Height="18" />
+	<Sprite Name="Pencil" X="0" Y="112" Width="16" Height="16" />
+	<Sprite Name="Rubber" X="16" Y="112" Width="16" Height="16" />
+	<Sprite Name="Selection" X="32" Y="112" Width="16" Height="16" />
+	<Sprite Name="PaintBucket" X="48" Y="112" Width="16" Height="16" />
+	<Sprite Name="EyeDropper" X="64" Y="112" Width="16" Height="16" />
+</SpriteSheet>

@@ -25,14 +25,14 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="BitmapFont.cpp">
-      <Filter>Source\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="tinyxml2.cpp">
-      <Filter>Source\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>Source\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>Source\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,17 +57,17 @@
     <ClInclude Include="Player.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="BitmapFont.h">
-      <Filter>Headers\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="tinyxml2.h">
-      <Filter>Headers\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Headers\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>Headers\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>Headers\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Headers\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +89,12 @@
     </Filter>
     <Filter Include="Source\UI">
       <UniqueIdentifier>{fd598c47-4bdf-4d00-b2de-960181cd03d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ThirdParty">
+      <UniqueIdentifier>{3d4d055d-6e61-485a-88b6-573dba934800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\ThirdParty">
+      <UniqueIdentifier>{4f826d60-7e6e-40ff-a6e3-2e1f1707c69f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

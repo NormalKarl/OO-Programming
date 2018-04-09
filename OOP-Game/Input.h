@@ -129,6 +129,10 @@ public:
 		return s_input->mousePos;
 	}
 
+	inline static sf::Vector2i GetMouseDelta() {
+		return s_input->mouseDelta;
+	}
+
 	inline static int GetMouseX() {
 		return s_input->mousePos.x;
 	}

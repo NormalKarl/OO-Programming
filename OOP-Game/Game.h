@@ -36,6 +36,14 @@ public:
 		return m_window->getDefaultView();
 	}
 
+	inline sf::Vector2u getSize() {
+		return { m_videoMode.width, m_videoMode.height };
+	}
+
+	inline sf::RenderWindow* getWindow() {
+		return m_window;
+	}
+
 	bool hasState(State* state);
 	bool hasState(std::string name);
 	void addState(State* state);

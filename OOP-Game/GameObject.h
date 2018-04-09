@@ -23,16 +23,22 @@ Buttons are a good example of having an AABB and a graphic for the button.
 class GameObject : public sf::Transformable, public sf::Drawable {
 private:
 	friend class State;
-	const State* m_parent;
+	State* m_state;
+	GameObject* m_parent;
+	//const GameObject* m_parent;
 	//std::vector<const Camera*> m_cameras; //These are the cameras in which this object will be drawn.
 	std::vector<const sf::Drawable*> m_graphics;
+	std::vector<GameObject*> m_children;
 	sf::Vector2f aabb;
 	sf::Vector2f aabbOrigin;
 
 	bool m_relativeToView;
+
+	int m_depth;
+	bool m_persistent;
 public:
-	GameObject();
-	~GameObject();
+	GameObject(bool _persistent = false);
+	virtual ~GameObject();
 
 	//Returned the first graphic.
 	const sf::Drawable* getGraphic();
@@ -41,6 +47,8 @@ public:
 	void setGraphic(const sf::Drawable* _graphic);
 	std::vector<const sf::Drawable*>* getGraphics();
 	void addGraphic(const sf::Drawable* _graphic);
+
+	void addChild(GameObject* _child);
 
 	sf::FloatRect getBoundingBox();
 	void setBoundingBox(float width, float height, float originX = 0, float originY = 0);
@@ -57,4 +65,18 @@ public:
 	inline void setRelativeToView(bool _relativeToView) {
 		this->m_relativeToView = _relativeToView;
 	}
+
+	inline bool isPersistent() const {
+		return m_persistent;
+	}
+
+	inline void setPersistent(bool _persistent) {
+		m_persistent = _persistent;
+	}
+
+	inline int getDepth() const {
+		return m_depth;
+	}
+
+	void setDepth(int depth);
 };

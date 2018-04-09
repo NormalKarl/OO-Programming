@@ -5,6 +5,19 @@ TileMap::TileMap(int mapWidth, int mapHeight, sf::Texture* texture, int cellSize
 	mapVA = sf::VertexArray(sf::PrimitiveType::Triangles, mapWidth * mapHeight * 6);
 	collision = new bool[mapWidth * mapHeight];
 	std::fill_n(collision, mapWidth * mapHeight, 0);
+
+	gridVisible = false;
+	gridVA = sf::VertexArray(sf::PrimitiveType::Lines, (mapWidth * 2) + (mapHeight * 2));
+
+	for (int x = 0; x <= mapWidth; x++) {
+		gridVA.append({ { (float)x * cellSize, 0 }, sf::Color::Black });
+		gridVA.append({ { (float)x * cellSize, (float)mapHeight * cellSize }, sf::Color::Black });
+	}
+
+	for (int y = 0; y <= mapHeight; y++) {
+		gridVA.append({ { 0, (float)y * cellSize }, sf::Color::Black });
+		gridVA.append({ { (float)mapWidth * cellSize, (float)y * cellSize }, sf::Color::Black });
+	}
 }
 
 TileMap::~TileMap() {
@@ -29,6 +42,9 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.texture = texture;
 	states.transform *= getTransform();
 	target.draw(mapVA, states);
+
+	if (gridVisible)
+		target.draw(gridVA, states);
 }
 
 bool TileMap::isSolid(int tileX, int tileY) {

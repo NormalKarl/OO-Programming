@@ -2,7 +2,7 @@
 #include "Input.h"
 #include "TileMap.h"
 #include "Graphics.h"
-#include "BitmapFont.h"
+#include "Resources.h"
 
 struct Flags
 {
