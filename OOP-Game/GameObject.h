@@ -36,6 +36,7 @@ private:
 
 	int m_depth;
 	bool m_persistent;
+	bool m_visible;
 public:
 	GameObject(bool _persistent = false);
 	virtual ~GameObject();
@@ -58,6 +59,10 @@ public:
 	virtual void update();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+	inline State* getState() {
+		return m_state;
+	}
+
 	inline bool isRelativeToView() {
 		return m_relativeToView;
 	}
@@ -74,9 +79,19 @@ public:
 		m_persistent = _persistent;
 	}
 
+	inline bool isVisible() const {
+		return m_visible;
+	}
+
+	inline void setVisible(bool _visible) {
+		m_visible = _visible;
+	}
+
 	inline int getDepth() const {
 		return m_depth;
 	}
 
 	void setDepth(int depth);
+
+	sf::Vector2f getGlobalPosition();
 };

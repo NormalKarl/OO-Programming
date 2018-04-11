@@ -5,4 +5,26 @@
 	<Sprite Name="Selection" X="32" Y="112" Width="16" Height="16" />
 	<Sprite Name="PaintBucket" X="48" Y="112" Width="16" Height="16" />
 	<Sprite Name="EyeDropper" X="64" Y="112" Width="16" Height="16" />
+	
+	<Sprite Name="PencilHover" X="0" Y="96" Width="16" Height="16" />
+	<Sprite Name="RubberHover" X="16" Y="96" Width="16" Height="16" />
+	<Sprite Name="SelectionHover" X="32" Y="96" Width="16" Height="16" />
+	<Sprite Name="PaintBucketHover" X="48" Y="96" Width="16" Height="16" />
+	<Sprite Name="EyeDropperHover" X="64" Y="96" Width="16" Height="16" />
+	
+	<Sprite Name="PencilDown" X="0" Y="80" Width="16" Height="16" />
+	<Sprite Name="RubberDown" X="16" Y="80" Width="16" Height="16" />
+	<Sprite Name="SelectionDown" X="32" Y="80" Width="16" Height="16" />
+	<Sprite Name="PaintBucketDown" X="48" Y="80" Width="16" Height="16" />
+	<Sprite Name="EyeDropperDown" X="64" Y="80" Width="16" Height="16" />
+	
+	
+	<Sprite Name="PanelContainer" X="32" Y="0" Width="64" Height="13" />
+	
+	<Sprite Name="DesignButton" X="80" Y="112" Width="30" Height="11" />
+	<Sprite Name="DesignHover" X="80" Y="96" Width="30" Height="11" />
+	<Sprite Name="DesignDown" X="80" Y="80" Width="30" Height="11" />
+	<Sprite Name="PalleteButton" X="112" Y="112" Width="31" Height="11" />
+	<Sprite Name="PalleteHover" X="112" Y="96" Width="31" Height="11" />
+	<Sprite Name="PalleteDown" X="112" Y="80" Width="31" Height="11" />
 </SpriteSheet>

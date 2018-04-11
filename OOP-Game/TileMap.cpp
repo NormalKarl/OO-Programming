@@ -25,6 +25,8 @@ TileMap::~TileMap() {
 }
 
 void TileMap::setTile(int cellX, int cellY, int tileX, int tileY, bool solid) {
+	if (!inBounds(tileX, tileY))
+		return; // TODO add error message.
 	//First Triangle
 	mapVA[((tileY * mapWidth) + tileX) * 6] = sf::Vertex{ { (float)(tileX * tileSize), (float)(tileY * tileSize) }, sf::Color::White,{ (float)(cellX * cellSize), (float)(cellY * cellSize) } };
 	mapVA[((tileY * mapWidth) + tileX) * 6 + 1] = sf::Vertex{ { (float)(tileX * tileSize) + tileSize, (float)tileY * tileSize }, sf::Color::White,{ (float)(cellX * cellSize + cellSize), (float)(cellY * cellSize) } };
@@ -38,13 +40,32 @@ void TileMap::setTile(int cellX, int cellY, int tileX, int tileY, bool solid) {
 	collision[tileY * mapWidth + tileX] = solid;
 }
 
-void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	states.texture = texture;
-	states.transform *= getTransform();
-	target.draw(mapVA, states);
 
-	if (gridVisible)
-		target.draw(gridVA, states);
+bool TileMap::isTileSet(int tileX, int tileY) {
+	//return inBounds(tileX, tileY) && mapVA[((tileY * mapWidth) + tileX) * 6] == sf::Vertex();
+	return false;
+}
+
+void TileMap::deleteTile(int tileX, int tileY) {
+	if (!inBounds(tileX, tileY))
+		return;
+
+	for (int i = 0; i < 6; i++) {
+		mapVA[((tileY * mapWidth) + tileX) * 6 + i] = sf::Vertex();
+	}
+
+	collision[tileY * mapWidth + tileX] = false;
+}
+
+void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	if (isVisible()) {
+		states.texture = texture;
+		states.transform *= getTransform();
+		target.draw(mapVA, states);
+
+		if (gridVisible)
+			target.draw(gridVA, states);
+	}
 }
 
 bool TileMap::isSolid(int tileX, int tileY) {

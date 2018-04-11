@@ -1,0 +1,18 @@
+//TilePallete VertexArray code
+
+//Member
+	sf::VertexArray m_pallete;
+
+
+
+//Functional Code
+	m_pallete = sf::VertexArray(sf::PrimitiveType::Quads, noX * noY * 4);
+
+	for (int x = 0; x < noX; x++) {
+		for (int y = 0; y < noX; y++) {
+			m_pallete[((y * noX) + x * 4) + 0] = { { (float)x + (x * m_cellSize), (float)y + (y * m_cellSize) },{ (float)x * m_cellSize, (float)y * m_cellSize } };
+			m_pallete[((y * noX) + x * 4) + 1] = { { (float)x + ((x * m_cellSize) + m_cellSize), (float)y + (y * m_cellSize) },{ (float)(x * m_cellSize) + m_cellSize, (float)y * m_cellSize } };
+			m_pallete[((y * noX) + x * 4) + 2] = { { (float)x + ((x * m_cellSize) + m_cellSize), (float)y + ((y * m_cellSize) + m_cellSize) },{ (float)(x * m_cellSize) + m_cellSize, (float)(y * m_cellSize) + m_cellSize } };
+			m_pallete[((y * noX) + x * 4) + 3] = { { (float)x + (x * m_cellSize), (float)y + ((y * m_cellSize) + m_cellSize) },{ (float)x * m_cellSize, (float)(y * m_cellSize) + m_cellSize } };
+		}
+	}

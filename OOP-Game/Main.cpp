@@ -9,6 +9,22 @@
 #include "Player.h"
 #include "Button.h"
 
+class LevelData {
+
+	TileMap* mainLevel;
+	Player* player;
+	std::vector<GameObject *> objects;
+
+	void save(tinyxml2::XMLNode* node) {
+
+	}
+
+	void load(tinyxml2::XMLNode* node) {
+
+	}
+
+};
+
 struct AssetStore {
 	sf::Texture* tileSet;
 	SpriteSheet* editorUI;
@@ -29,20 +45,84 @@ struct AssetStore {
 	}
 };
 
+class TilePalleteObject : public GameObject {
+private:
+	const sf::Texture* m_texture;
+	int m_cellSize;
+	sf::Sprite** tiles;
+	sf::RectangleShape m_border;
+public:
+	TilePalleteObject(const sf::Texture* _texture, int _cellSize) : m_texture(_texture), m_cellSize(_cellSize) {
+		int noX = (int)m_texture->getSize().x / m_cellSize;
+		int noY = (int)m_texture->getSize().y / m_cellSize;
+		setBoundingBox(noX + (m_cellSize * noX) - 1, noY + (m_cellSize * noY) - 1);
+
+		m_border.setPosition(-1, -1);
+		m_border.setSize(sf::Vector2f(getBoundingBox().width + 2, getBoundingBox().height + 2));
+		m_border.setFillColor(sf::Color(255, 255, 255, 50));
+		m_border.setOutlineColor(sf::Color::Black);
+		m_border.setOutlineThickness(1.0f);
+
+		addGraphic(&m_border);
+
+		tiles = new sf::Sprite*[noX * noY];
+
+		for (int x = 0; x < noX; x++) {
+			for (int y = 0; y < noX; y++) {
+				sf::Sprite* sprite = new sf::Sprite();
+				sprite->setTexture(*m_texture);
+				sprite->setTextureRect({ x * m_cellSize, y * m_cellSize, m_cellSize, m_cellSize });
+				sprite->setPosition((float)x + (x * m_cellSize), (float)y + (y * m_cellSize));
+				tiles[(y * noX) + x] = sprite;
+				addGraphic(sprite);
+			}
+		}
+
+		setRelativeToView(false);
+	}
+
+};
+
 class EditorState : public State {
 private:
+
+	enum class Tool {
+		Pencil,
+		Rubber,
+		Select,
+		Fill,
+		Picker
+	};
+
+	enum class Panel {
+		Pallete,
+		Design
+	};
+
+	GameObject* toolbarContainer;
+	ButtonGroup* toolGroup;
 	Button* pencilButton;
 	Button* rubberButton;
 	Button* selectionButton;
 	Button* fillButton;
 	Button* eyeDropperButton;
-	 
-	GameObject* toolbarContainer;
-
+	
+	GameObject* panelContainer;
+	ButtonGroup* panelGroup;
+	Button* designButton;
+	Button* palleteButton;
 
 	TileMap* map;
+	TilePalleteObject* tilePallete;
 
 	const InputState* leftMouse;
+	const InputState* middleMouse;
+	const InputState* rightMouse;
+
+	Tool tool;
+	Panel panel;
+
+	sf::Vector2i selectedTileSetTile;
 public:
 	EditorState(const AssetStore& store, std::string name) : State(name) {
 		setClearColor(sf::Color(0, 88, 162));
@@ -51,52 +131,131 @@ public:
 		map->setGridVisible(true);
 		addGameObject(map);
 
-
 		toolbarContainer = new GameObject();
 
 		for (int i = 0; i < 5; i++) {
 			sf::Sprite* graphic = store.editorUI->makeSprite("ToolbarContainer");
 
-			graphic->setPosition(3.0f, (float)3 + (i * 17));
+			graphic->setPosition(0.0f, (float)0 + (i * 17));
 
 			toolbarContainer->addGraphic(graphic);
-
 		}
+
+		toolbarContainer->setBoundingBox(18, 1 + (5 * 17));
+		toolbarContainer->setPosition(3.0f, 3.0f);
 		toolbarContainer->setRelativeToView(false);
 
 		addGameObject(toolbarContainer);
 
-		pencilButton = new Button(store.editorUI->getSpriteData("Pencil"));
-		rubberButton = new Button(store.editorUI->getSpriteData("Rubber"));
-		selectionButton = new Button(store.editorUI->getSpriteData("Selection"));
-		fillButton = new Button(store.editorUI->getSpriteData("PaintBucket"));
-		eyeDropperButton = new Button(store.editorUI->getSpriteData("EyeDropper"));
+		toolbarContainer->addChild(pencilButton = new Button(1, 1 + (0 * 17), store.editorUI, "Pencil", "PencilHover", "PencilDown", true));
+		toolbarContainer->addChild(rubberButton = new Button(1, 1 + (1 * 17), store.editorUI, "Rubber", "RubberHover", "RubberDown", true));
+		toolbarContainer->addChild(selectionButton = new Button(1, 1 + (2 * 17), store.editorUI, "Selection", "SelectionHover", "SelectionDown", true));
+		toolbarContainer->addChild(fillButton = new Button(1, 1 + (3 * 17), store.editorUI, "PaintBucket", "PaintBucketHover", "PaintBucketDown", true));
+		toolbarContainer->addChild(eyeDropperButton = new Button(1, 1 + (4 * 17), store.editorUI, "EyeDropper", "EyeDropperHover", "EyeDropperDown", true));
+		toolGroup = new ButtonGroup({ pencilButton, rubberButton, selectionButton, fillButton, eyeDropperButton });
+		toolGroup->select(pencilButton);
 
-		pencilButton->setPosition(1, 1 + (0 * 17));
-		rubberButton->setPosition(1, 1 + (1 * 17));
-		selectionButton->setPosition(1, 1 + (2 * 17));
-		fillButton->setPosition(1, 1 + (3 * 17));
-		eyeDropperButton->setPosition(1, 1 + (4 * 17));
+		panelContainer = new GameObject();
+		const SpriteData* panelContainerData = store.editorUI->getSpriteData("PanelContainer");
+		panelContainer->addGraphic(panelContainerData->makeSprite());
+		panelContainer->setBoundingBox(panelContainerData->width, panelContainerData->height);
+		panelContainer->setPosition((480 / 2) - (panelContainerData->width / 2), 3.0f);
+		addGameObject(panelContainer);
 
-		toolbarContainer->addChild(pencilButton);
-		toolbarContainer->addChild(rubberButton);
-		toolbarContainer->addChild(selectionButton);
-		toolbarContainer->addChild(fillButton);
-		toolbarContainer->addChild(eyeDropperButton);
+		panelContainer->addChild(designButton = new Button(1, 1, store.editorUI, "DesignButton", "DesignHover", "DesignDown", true));
+		panelContainer->addChild(palleteButton = new Button(32, 1, store.editorUI, "PalleteButton", "PalleteHover", "PalleteDown", true));
+		panelGroup = new ButtonGroup({ designButton, palleteButton });
+		panelGroup->select(designButton);
 
-		setCamera(new Camera(480, 270));
-
+		setCamera(new Camera(480, 270)); 
+		getCamera().setCenter(map->getPosition() + sf::Vector2f(map->getMapWidth() / 2 * map->getCellSize(), map->getMapHeight() / 2 * map->getCellSize()));
 		leftMouse = Input::GetState(sf::Mouse::Left);
+		middleMouse = Input::GetState(sf::Mouse::Middle);
+		rightMouse = Input::GetState(sf::Mouse::Right);
+
+		tilePallete = new TilePalleteObject(store.tileSet, 16);
+		tilePallete->setVisible(false);
+
+		float scale = 225.0f / tilePallete->getBoundingBox().height;
+		tilePallete->setScale(scale, scale);
+
+		tilePallete->setPosition((480 - (tilePallete->getBoundingBox().width * scale)) / 2, (270 - (tilePallete->getBoundingBox().height * scale)) / 2);
+
+		addGameObject(tilePallete);
+
+
+		selectedTileSetTile = { 0, 0 };
 	}
 
 	void update() {
 		State::update();
+		if (rightMouse->pressed()) {
+			panelGroup->select(palleteButton);
+			tilePallete->setVisible(true);
+			map->setVisible(false);
+			panel = Panel::Pallete;
+		}
+		
+		if (rightMouse->released()) {
+			panelGroup->select(designButton);
+			tilePallete->setVisible(false);
+			map->setVisible(true);
+			panel = Panel::Design;
+		}
+
+		if (middleMouse->down()) {
+			getCamera().setCenter(getCamera().getCenter() - getCamera().mapDistance(Input::GetMouseDelta()));
+		};
 
 		if (leftMouse->down()) {
-			getCamera().setCenter(getCamera().getCenter() - getCamera().mapPixelToCoords((sf::Vector2i)Input::GetMouseDelta()));
+			sf::Vector2f pos = getCamera().mapDistance(Input::GetMousePos());
+			//printf("x: %f, y: %f\n", pos.x, pos.y);
 
-			//printf("")
-		};
+			if (toolbarContainer->intersect(pos)) {
+				if (pencilButton->isClicked()) {
+					tool = Tool::Pencil;
+				}
+				else if (rubberButton->isClicked()) {
+					tool = Tool::Rubber;
+				}
+				else if (selectionButton->isClicked()) {
+					tool = Tool::Select;
+				}
+				else if (fillButton->isClicked()) {
+					tool = Tool::Fill;
+				}
+				else if (eyeDropperButton->isClicked()) {
+					tool = Tool::Picker;
+				}
+			}
+			else if (panelContainer->intersect(pos)) {
+				if (designButton->isClicked()) {
+					panel = Panel::Design;
+					tilePallete->setVisible(false);
+					map->setVisible(true);
+				}
+				else if (palleteButton->isClicked()) {
+					panel = Panel::Pallete;
+					tilePallete->setVisible(true);
+					map->setVisible(false);
+				}
+			}
+			else {
+				sf::Vector2f projectedPos = getCamera().mapPixelToCoords(Input::GetMousePos()) / (float)map->getCellSize();
+
+				switch (tool) {
+				case Tool::Pencil:
+					map->setTile(0, 0, (int)projectedPos.x, (int)projectedPos.y, false);
+					break;
+				case Tool::Rubber:
+					map->deleteTile((int)projectedPos.x, (int)projectedPos.y);
+					break;
+				case Tool::Picker:
+					map->isTileSet((int)projectedPos.x, (int)projectedPos.y);
+					break;
+				}
+			}
+		}
 	}
 
 };
@@ -130,12 +289,6 @@ public:
 		camera.setFocused(player);
 		gui_camera = (Camera&)sf::View(sf::FloatRect(0, 0, 960, 540));
 		setCamera(&camera);
-	}
-
-	~PlayState() {
-		delete map;
-		delete player;
-		delete btn;
 	}
 
 };

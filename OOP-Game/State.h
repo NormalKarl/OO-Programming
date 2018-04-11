@@ -31,6 +31,7 @@ public:
 	}
 
 	sf::Vector2f mapPixelToCoords(sf::Vector2i mousePos);
+	sf::Vector2f Camera::mapDistance(sf::Vector2i pixelDistance);
 
 	inline int getDepth() const {
 		return m_depth;

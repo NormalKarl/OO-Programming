@@ -10,6 +10,7 @@ private:
 	int cellSize;
 
 	sf::VertexArray mapVA;
+	
 	int mapWidth;
 	int mapHeight;
 	float tileSize;
@@ -24,7 +25,9 @@ public:
 	~TileMap();
 
 	void setTile(int cellX, int cellY, int tileX, int tileY, bool solid);
+	bool isTileSet(int tileX, int tileY);
 	bool isSolid(int tileX, int tileY);
+	void deleteTile(int tileX, int tileY);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -34,6 +37,10 @@ public:
 
 	inline int getMapHeight() {
 		return mapHeight;
+	}
+
+	inline int getCellSize() {
+		return cellSize;
 	}
 
 	inline bool inBounds(int tileX, int tileY) {

@@ -133,7 +133,7 @@ const SpriteData* SpriteSheet::getSpriteData(std::string name) const {
 	return NULL;
 }
 
-sf::Sprite* SpriteSheet::makeSprite(std::string name) {
+sf::Sprite* SpriteSheet::makeSprite(std::string name) const {
 	const SpriteData* spr = getSpriteData(name);
 
 	if (spr != NULL) {

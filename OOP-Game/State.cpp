@@ -13,6 +13,14 @@ sf::Vector2f Camera::mapPixelToCoords(sf::Vector2i mousePos) {
 	return m_parent->getGame()->getWindow()->mapPixelToCoords(mousePos);
 }
 
+sf::Vector2f Camera::mapDistance(sf::Vector2i pixelDistance) {
+	sf::Vector2f ndc = (sf::Vector2f)pixelDistance;
+	ndc.x /= (float)m_parent->getGame()->getWindow()->getSize().x;
+	ndc.y /= (float)m_parent->getGame()->getWindow()->getSize().y;
+
+	return sf::Vector2f((ndc.x * getViewport().width) * (float)getSize().x, (ndc.y * getViewport().height) * (float)getSize().y);
+}
+
 State::State(std::string name) : m_name(name) {
 	m_game = NULL;
 

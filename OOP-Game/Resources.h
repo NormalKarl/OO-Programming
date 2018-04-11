@@ -114,5 +114,5 @@ public:
 	}
 
 	const SpriteData* getSpriteData(std::string name) const;
-	sf::Sprite* makeSprite(std::string name);
+	sf::Sprite* makeSprite(std::string name) const;
 };

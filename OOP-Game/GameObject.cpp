@@ -10,6 +10,7 @@ GameObject::GameObject(bool _persistent) {
 	m_relativeToView = true;
 	m_depth = 0;
 	m_persistent = _persistent;
+	m_visible = true;
 }
 
 GameObject::~GameObject() {
@@ -32,26 +33,28 @@ void GameObject::update() {
 }
 
 void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	const sf::View& v = target.getView();
+	if (m_visible) {
+		const sf::View& v = target.getView();
 
-	if (!m_relativeToView) {
-		sf::View v2 = v;
-		v2.setCenter(v2.getSize() / 2.0f);
-		target.setView(v2);
-	}
+		if (!m_relativeToView) {
+			sf::View v2 = v;
+			v2.setCenter(v2.getSize() / 2.0f);
+			target.setView(v2);
+		}
 
-	states.transform *= getTransform();
+		states.transform *= getTransform();
 
-	for (const sf::Drawable* drawable : m_graphics) {
-		target.draw(*drawable, states);
-	}
+		for (const sf::Drawable* drawable : m_graphics) {
+			target.draw(*drawable, states);
+		}
 
-	for (GameObject* child : m_children) {
-		target.draw(*child, states);
-	}
+		for (GameObject* child : m_children) {
+			target.draw(*child, states);
+		}
 
-	if (!m_relativeToView) {
-		target.setView(v);
+		if (!m_relativeToView) {
+			target.setView(v);
+		}
 	}
 }
 
@@ -77,6 +80,7 @@ void GameObject::addGraphic(const sf::Drawable* _graphic) {
 
 void GameObject::addChild(GameObject* _child) {
 	m_children.push_back(_child);
+	_child->m_state = m_state;
 	_child->m_parent = this;
 }
 
@@ -86,7 +90,17 @@ void GameObject::setBoundingBox(float width, float height, float originX, float 
 }
 
 sf::FloatRect GameObject::getBoundingBox() {
-	return sf::FloatRect(getPosition() - aabbOrigin, aabb);
+	return sf::FloatRect(getGlobalPosition() - aabbOrigin, aabb);
+}
+
+sf::Vector2f GameObject::getGlobalPosition() {
+	sf::Vector2f finalPos = getPosition();
+	
+	if (m_parent != NULL) {
+		finalPos = m_parent->getGlobalPosition() + getPosition();
+	}
+
+	return finalPos;
 }
 
 bool GameObject::intersect(sf::Vector2i point) {
