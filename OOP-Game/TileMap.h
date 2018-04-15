@@ -10,7 +10,8 @@ private:
 	int cellSize;
 
 	sf::VertexArray mapVA;
-	
+	sf::Vector2i* tileData;
+
 	int mapWidth;
 	int mapHeight;
 	float tileSize;
@@ -19,6 +20,7 @@ private:
 
 	bool gridVisible;
 	sf::VertexArray gridVA;
+	
 public:
 	TileMap() {}
 	TileMap(int mapWidth, int mapHeight, sf::Texture* texture, int cellSize, float tileSize = 16.0f);
@@ -28,6 +30,7 @@ public:
 	bool isTileSet(int tileX, int tileY);
 	bool isSolid(int tileX, int tileY);
 	void deleteTile(int tileX, int tileY);
+	sf::Vector2i getTileData(int tileX, int tileY);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

@@ -99,5 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Old Code.txt" />
+    <Text Include="TODO PLan.txt" />
   </ItemGroup>
 </Project>
