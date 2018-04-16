@@ -59,10 +59,6 @@ public:
 	virtual void update();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	inline State* getState() {
-		return m_state;
-	}
-
 	inline bool isRelativeToView() {
 		return m_relativeToView;
 	}
@@ -89,6 +85,10 @@ public:
 
 	inline int getDepth() const {
 		return m_depth;
+	}
+
+	inline State* getState() {
+		return m_state;
 	}
 
 	void setDepth(int depth);

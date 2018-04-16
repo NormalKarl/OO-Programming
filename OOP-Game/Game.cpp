@@ -31,7 +31,7 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 }
 
 void Game::start() {
-	m_window = new sf::RenderWindow(m_videoMode, m_title, sf::Style::None);
+	m_window = new sf::RenderWindow(m_videoMode, m_title/*, sf::Style::None*/);
 	m_window->setFramerateLimit(60);
 	m_window->setVerticalSyncEnabled(true);
 	m_window->setKeyRepeatEnabled(false);

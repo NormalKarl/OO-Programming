@@ -8,25 +8,31 @@ class TileMap;
 
 struct CollisionFlags {
 	union {
-		struct {
-			bool left;
-			bool right;
-		};
-
-		bool horizontal;
-	};
-	union {
-		struct {
-			bool top;
-
-			union {
-				bool bottom;
-				bool grounded;
+		union {
+			struct {
+				bool left;
+				bool right;
 			};
-		};
 
-		bool vertical;
+			short horizontal;
+		};
+		union {
+			struct {
+				bool top;
+
+				union {
+					bool bottom;
+					bool grounded;
+				};
+			};
+
+			short vertical;
+		};
 	};
+
+	
+
+	int all;
 };
 
 class Player : public GameObject

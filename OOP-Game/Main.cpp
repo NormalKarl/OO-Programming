@@ -54,6 +54,8 @@ private:
 	int countX;
 	int countY;
 	sf::RectangleShape selectedShape;
+
+	const InputState* leftButton;
 public:
 	TilePalleteObject(const sf::Texture* _texture, int _cellSize) : m_texture(_texture), m_cellSize(_cellSize) {
 		int noX = (int)m_texture->getSize().x / m_cellSize;
@@ -90,8 +92,41 @@ public:
 		selectedShape.setSize({ (float)m_cellSize, (float)m_cellSize });
 		addGraphic(&selectedShape);
 
+		leftButton = Input::GetState(sf::Mouse::Left);
 
 		setRelativeToView(false);
+	}
+
+	bool selecting = false;
+	sf::Vector2i startTile;
+	sf::Vector2i endTile;
+
+	void update() {
+		if (isVisible()) {
+			sf::Vector2f pos = getState()->getCamera().mapDistance(Input::GetMousePos());
+
+			if (leftButton->down()) {
+				sf::Vector2f relativePos = pos - getPosition();
+
+				sf::Vector2i tileIndex = getTileIndex(pos);
+
+				if (selecting) {
+					endTile = tileIndex;
+				} else {
+					//if (intersect(pos)) {
+						startTile = tileIndex;
+						selecting = true;
+					//}
+				}
+
+				
+			} else if (leftButton->released()) {
+				selecting = false;
+			}
+		}
+
+		selectedShape.setPosition(getPosition() + ((sf::Vector2f)startTile * 32.0f));
+		selectedShape.setSize((sf::Vector2f)((endTile - startTile) + sf::Vector2i(1, 1)) * 32.0f);
 	}
 
 	void setSelectedPos(sf::Vector2i tileIndex) {

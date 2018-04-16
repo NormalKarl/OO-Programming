@@ -17,8 +17,8 @@ Input::Input(const Game* _parent) : m_parent(_parent) {
 }
 
 void Input::clear() {
-	std::fill_n(m_keyStates, sf::Keyboard::KeyCount, InputState::State::Up);
-	std::fill_n(m_buttonStates, sf::Mouse::ButtonCount, InputState::State::Up);
+	//std::fill_n(m_keyStates, sf::Keyboard::KeyCount, InputState::State::Up);
+	//std::fill_n(m_buttonStates, sf::Mouse::ButtonCount, InputState::State::Up);
 	mouseWheel = 0;
 	mouseWheelDelta = 0;
 }
