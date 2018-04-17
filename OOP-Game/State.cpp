@@ -15,8 +15,8 @@ sf::Vector2f Camera::mapPixelToCoords(sf::Vector2i mousePos) {
 
 sf::Vector2f Camera::mapDistance(sf::Vector2i pixelDistance) {
 	sf::Vector2f ndc;
-	ndc.x = (float)getViewport().width / (float)m_parent->getGame()->getWindow()->getSize().x;
-	ndc.y = (float)getViewport().height / (float)m_parent->getGame()->getWindow()->getSize().y;
+	ndc.x = (float)getSize().x / (float)m_parent->getGame()->getWindow()->getSize().x;
+	ndc.y = (float)getSize().y / (float)m_parent->getGame()->getWindow()->getSize().y;
 
 	return sf::Vector2f((float)pixelDistance.x * ndc.x, (float)pixelDistance.y * ndc.y);
 }

@@ -107,7 +107,6 @@ public:
 
 			if (leftButton->down()) {
 				sf::Vector2f relativePos = pos - getPosition();
-
 				sf::Vector2i tileIndex = getTileIndex(pos);
 
 				if (selecting) {
@@ -119,14 +118,16 @@ public:
 					//}
 				}
 
+
 				
 			} else if (leftButton->released()) {
 				selecting = false;
 			}
 		}
+		printf(selecting ? "true\n" : "false\n");
 
-		selectedShape.setPosition(getPosition() + ((sf::Vector2f)startTile * 32.0f));
-		selectedShape.setSize((sf::Vector2f)((endTile - startTile) + sf::Vector2i(1, 1)) * 32.0f);
+		selectedShape.setPosition((sf::Vector2f)(startTile + (startTile * m_cellSize)));
+		selectedShape.setSize((sf::Vector2f)((sf::Vector2i)(endTile - startTile) + (((endTile - startTile) + sf::Vector2i(1, 1)) * m_cellSize)));
 	}
 
 	void setSelectedPos(sf::Vector2i tileIndex) {
