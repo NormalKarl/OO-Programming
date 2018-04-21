@@ -386,7 +386,7 @@ private:
 	Camera gui_camera;
 public:
 	PlayState(const AssetStore& store, std::string name) : State(name) {
-		map = new TileMap(16, 16, store.tileSet, 16, 16);
+		map = new TileMap(16, 16, store.tileSet, 16, 32);
 
 		for (int i = 0; i < 16; i++)
 			map->setTile(0, 0, i, 2, true);
@@ -435,7 +435,7 @@ void entry() {
 	PlayState* state = new PlayState(store, "Play");
 	EditorState* editorState = new EditorState(store, "Editor");
 
-	game.addState(editorState);
+	game.addState(state);
 	game.start();
 	delete state;
 }
