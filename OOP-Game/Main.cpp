@@ -94,7 +94,7 @@ public:
 
 
 		selectedShape.setFillColor(sf::Color(255, 255, 255, 100));
-		selectedShape.setOutlineColor(sf::Color::White);
+		selectedShape.setOutlineColor(sf::Color(0, 0, 0, 150));
 		selectedShape.setSize({ (float)m_cellSize, (float)m_cellSize });
 		selectedShape.setOutlineThickness(1.0f);
 		addGraphic(&selectedShape);

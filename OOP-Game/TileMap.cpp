@@ -60,10 +60,11 @@ void TileMap::deleteTile(int tileX, int tileY) {
 	if (!inBounds(tileX, tileY))
 		return;
 
-	for (int i = 0; i < 6; i++) {
-		mapVA[((tileY * mapWidth) + tileX) * 6 + i] = sf::Vertex();
+	for (int i = 0; i < 4; i++) {
+		mapVA[((tileY * mapWidth) + tileX) * 4 + i] = sf::Vertex();
 	}
 
+	tileData[(tileY * mapWidth) + tileX] = { -1, -1 };
 	collision[tileY * mapWidth + tileX] = false;
 }
 
