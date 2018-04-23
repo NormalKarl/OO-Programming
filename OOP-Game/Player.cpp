@@ -14,7 +14,7 @@ struct Flags
 			bool left;
 		};
 
-		bool sides;
+		short sides;
 	};
 
 	union {
@@ -30,10 +30,12 @@ Player::Player(TileMap* map) {
 	right = Input::GetState(sf::Keyboard::Key::Right);
 	left = Input::GetState(sf::Keyboard::Key::Left);
 	size = vel = { 0, 0 };
-	shape = sf::RectangleShape({ 32, 64 });
-	hitbox = { 32.0f, 64.0f };
+	shape = sf::RectangleShape({ 16, 32 });
+	hitbox = { 16.0f, 32.0f };
 	shape.setFillColor(sf::Color::White);
 	grounded = false;
+
+	setPosition(0, -100);
 
 	//BitmapFont* font = new BitmapFont("assets/font.fnt", { "assets/font_0.png" });
 	//addGraphic(new Label(font, "Hello, World"));

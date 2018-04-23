@@ -30,6 +30,7 @@ struct AssetStore {
 	SpriteSheet* editorUI;
 	BitmapFont* squareFont;
 	sf::Texture* mainMenu;
+	sf::Texture* infoBar;
 
 	AssetStore() {
 		tileSet = new sf::Texture();
@@ -38,12 +39,15 @@ struct AssetStore {
 		squareFont = new BitmapFont("assets/font.fnt", { "assets/font_0.png" });
 		mainMenu = new sf::Texture();
 		mainMenu->loadFromFile("assets/mainmenu.png");
+		infoBar = new sf::Texture();
+		infoBar->loadFromFile("assets/bar.png");
 	};
 
 	~AssetStore() {
 		delete tileSet;
 		delete editorUI;
 		delete squareFont;
+		delete mainMenu;
 	}
 };
 
@@ -92,6 +96,7 @@ public:
 		selectedShape.setFillColor(sf::Color(255, 255, 255, 100));
 		selectedShape.setOutlineColor(sf::Color::White);
 		selectedShape.setSize({ (float)m_cellSize, (float)m_cellSize });
+		selectedShape.setOutlineThickness(1.0f);
 		addGraphic(&selectedShape);
 
 		leftButton = Input::GetState(sf::Mouse::Left);
@@ -108,6 +113,7 @@ public:
 
 		if (isVisible() && intersect(pos)) {
 			sf::Vector2i tileIndex = getTileIndex(pos);
+			printf("%i, %i\n", tileIndex.x, tileIndex.y);
 
 			if (tileIndex.x != -1 && tileIndex.y != -1) {
 				if (leftButton->pressed()) {
@@ -173,7 +179,7 @@ public:
 		pos.y *= sY;
 		pos /= (float)m_cellSize + 1.0f;
 
-		auto tileIndex = sf::Vector2i(floorf(pos.x), floorf(pos.y));
+		auto tileIndex = sf::Vector2i((int)floorf(pos.x), (int)floorf(pos.y));
 
 		if (tileIndex.x < 0 || tileIndex.x >= countX || tileIndex.y < 0 || tileIndex.y >= countY) {
 			return { clamp(tileIndex.x, 0, countX - 1), clamp(tileIndex.y, 0, countY - 1) };
@@ -284,6 +290,7 @@ public:
 		float scale = 225.0f / tilePallete->getBoundingBox().height;
 		tilePallete->setScale(scale, scale);
 		tilePallete->setPosition((480 - (tilePallete->getBoundingBox().width * scale)) / 2, (270 - (tilePallete->getBoundingBox().height * scale)) / 2);
+		tilePallete->setBoundingBox(tilePallete->getBoundingBox().width * scale, tilePallete->getBoundingBox().height * scale);
 
 		addGameObject(tilePallete);
 		selectedTileSetTile = { 0, 0 };
@@ -358,7 +365,13 @@ public:
 				} else {
 					switch (tool) {
 						case Tool::Pencil:
-							map->setTile(selectedTileSetTile.x, selectedTileSetTile.y, (int)projectedPos.x, (int)projectedPos.y, false);
+							for (int tileX = 0; tileX <= (tilePallete->endTile.x - tilePallete->startTile.x); tileX++) {
+								for (int tileY = 0; tileY <= (tilePallete->endTile.y - tilePallete->startTile.y); tileY++) {
+									if (map->inBounds(projectedPos.x + tileX, projectedPos.y + tileY)) {
+										map->setTile(tilePallete->startTile.x + tileX, tilePallete->startTile.y + tileY, projectedPos.x + tileX, projectedPos.y + tileY, true);
+									}
+								}
+							}
 							break;
 						case Tool::Rubber:
 							map->deleteTile((int)projectedPos.x, (int)projectedPos.y);
@@ -386,7 +399,7 @@ private:
 	Camera gui_camera;
 public:
 	PlayState(const AssetStore& store, std::string name) : State(name) {
-		map = new TileMap(16, 16, store.tileSet, 16, 32);
+		map = new TileMap(16, 16, store.tileSet, 16, 16);
 
 		for (int i = 0; i < 16; i++)
 			map->setTile(0, 0, i, 2, true);
@@ -401,11 +414,17 @@ public:
 		addGameObject(map);
 		addGameObject(player);
 		//addGameObject(btn);
-		camera = (Camera&)sf::View(sf::FloatRect(0, 0, 960, 540));
-
+		camera = (Camera&)sf::View(sf::FloatRect(0, 0, 480, 270));
 		camera.setFocused(player);
-		gui_camera = (Camera&)sf::View(sf::FloatRect(0, 0, 960, 540));
 		setCamera(&camera);
+
+		GameObject* object = new GameObject();
+		object->setRelativeToView(false);
+		sf::Sprite* spr = new sf::Sprite(*store.infoBar);
+		object->addGraphic(spr);
+		addGameObject(object);
+
+		this->setClearColor(sf::Color(244, 104, 104, 255));
 	}
 
 };
@@ -435,7 +454,7 @@ void entry() {
 	PlayState* state = new PlayState(store, "Play");
 	EditorState* editorState = new EditorState(store, "Editor");
 
-	game.addState(state);
+	game.addState(editorState);
 	game.start();
 	delete state;
 }
