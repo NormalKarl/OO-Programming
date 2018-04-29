@@ -27,4 +27,13 @@
 	<Sprite Name="PalleteIdle" X="112" Y="112" Width="31" Height="11" />
 	<Sprite Name="PalleteHover" X="112" Y="96" Width="31" Height="11" />
 	<Sprite Name="PalleteDown" X="112" Y="80" Width="31" Height="11" />
+	
+	<Sprite Name="LayerContainer" X="128" Y="0" Width="73" Height="25" />
+	<Sprite Name="GameObjectsIdle" X="145" Y="112" Width="59" Height="11" />
+	<Sprite Name="GameObjectsHover" X="145" Y="96" Width="59" Height="11" />
+	<Sprite Name="GameObjectsDown" X="145" Y="80" Width="59" Height="11" />
+	
+	<Sprite Name="EnvironmentIdle" X="145" Y="64" Width="59" Height="11" />
+	<Sprite Name="EnvironmentHover" X="145" Y="48" Width="59" Height="11" />
+	<Sprite Name="EnvironmentDown" X="145" Y="32" Width="59" Height="11" />
 </SpriteSheet>

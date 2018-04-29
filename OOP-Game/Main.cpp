@@ -15,7 +15,11 @@ class LevelData {
 	Player* player;
 	std::vector<GameObject *> objects;
 
-	void save(tinyxml2::XMLNode* node) {
+	void save(std::string filename) {
+		tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
+		doc->NewElement("Level");
+
+		doc->SaveFile(filename.c_str());
 
 	}
 
@@ -72,7 +76,7 @@ public:
 		countY = noY;
 
 		m_border.setPosition(-1, -1);
-		m_border.setSize(sf::Vector2f(getBoundingBox().width + 2, getBoundingBox().height + 2));
+		m_border.setSize(sf::Vector2f(getBoundingBox().width + 1, getBoundingBox().height + 1));
 		m_border.setFillColor(sf::Color(255, 255, 255, 50));
 		m_border.setOutlineColor(sf::Color::Black);
 		m_border.setOutlineThickness(1.0f);
@@ -113,7 +117,6 @@ public:
 
 		if (isVisible() && intersect(pos)) {
 			sf::Vector2i tileIndex = getTileIndex(pos);
-			printf("%i, %i\n", tileIndex.x, tileIndex.y);
 
 			if (tileIndex.x != -1 && tileIndex.y != -1) {
 				if (leftButton->pressed()) {
@@ -218,6 +221,11 @@ private:
 	Button* designButton;
 	Button* palleteButton;
 
+	GameObject* layerContainer;
+	ButtonGroup* layerGroup;
+	Button* gameObjectsButton;
+	Button* environmentButton;
+
 	TileMap* map;
 	TilePalleteObject* tilePallete;
 
@@ -237,7 +245,7 @@ public:
 		map->setGridVisible(true);
 		addGameObject(map);
 
-		PrimaryToolbarCreation: {
+		{
 			toolbarContainer = new GameObject();
 
 			for (int i = 0; i < 5; i++) {
@@ -263,7 +271,7 @@ public:
 			toolGroup->select(pencilButton);
 		}
 
-		PanelSelectorCreation: {
+		{
 			panelContainer = new GameObject();
 			const SpriteData* sprContainer = store.editorUI->getSpriteData("PanelContainer");
 			panelContainer->addGraphic(sprContainer->makeSprite());
@@ -276,6 +284,20 @@ public:
 			panelContainer->addChild(palleteButton = makeToggleButton(32, 1, store.editorUI, "Pallete"));
 			panelGroup = new ButtonGroup({ designButton, palleteButton });
 			panelGroup->select(designButton);
+		}
+
+		{
+			layerContainer = new GameObject();
+			const SpriteData* sprContainer = store.editorUI->getSpriteData("LayerContainer");
+			layerContainer->addGraphic(sprContainer->makeSprite());
+			layerContainer->setBoundingBox(sprContainer->width, sprContainer->height);
+			layerContainer->setPosition(404, 3);
+			addGameObject(layerContainer);
+
+			layerContainer->addChild(gameObjectsButton = makeToggleButton(13, 1, store.editorUI, "GameObjects"));
+			layerContainer->addChild(environmentButton = makeToggleButton(13, 13, store.editorUI, "Environment"));
+			layerGroup = new ButtonGroup({ gameObjectsButton, environmentButton });
+			layerGroup->select(environmentButton);
 		}
 
 		setCamera(new Camera(480, 270)); 
@@ -312,6 +334,7 @@ public:
 				tilePallete->setVisible(false);
 				map->setVisible(true);
 				toolbarContainer->setVisible(true);
+				layerContainer->setVisible(true);
 				break;
 			case Panel::Pallete:
 				m_panel = Panel::Pallete;
@@ -319,6 +342,7 @@ public:
 				tilePallete->setVisible(true);
 				map->setVisible(false);
 				toolbarContainer->setVisible(false);
+				layerContainer->setVisible(false);
 				break;
 		}
 	}
