@@ -105,7 +105,7 @@ public:
 
 		leftButton = Input::GetState(sf::Mouse::Left);
 
-		setRelativeToView(false);
+		setUsingCamera(false);
 	}
 
 	bool selecting = false;
@@ -256,7 +256,7 @@ public:
 
 			toolbarContainer->setBoundingBox(18, 1 + (5 * 17));
 			toolbarContainer->setPosition(3.0f, 3.0f);
-			toolbarContainer->setRelativeToView(false);
+			toolbarContainer->setUsingCamera(false);
 
 			addGameObject(toolbarContainer);
 
@@ -277,7 +277,7 @@ public:
 			panelContainer->addGraphic(sprContainer->makeSprite());
 			panelContainer->setBoundingBox(sprContainer->width, sprContainer->height);
 			panelContainer->setPosition((480 / 2) - (sprContainer->width / 2), 3.0f);
-			panelContainer->setRelativeToView(false);
+			panelContainer->setUsingCamera(false);
 			addGameObject(panelContainer);
 
 			panelContainer->addChild(designButton = makeToggleButton(1, 1, store.editorUI, "Design"));
@@ -300,7 +300,7 @@ public:
 			layerGroup->select(environmentButton);
 		}
 
-		setCamera(new Camera(480, 270)); 
+		setCamera(Camera(480, 270)); 
 		getCamera().setCenter(map->getPosition() + sf::Vector2f(map->getMapWidth() / 2 * map->getCellSize(), map->getMapHeight() / 2 * map->getCellSize()));
 		leftMouse = Input::GetState(sf::Mouse::Left);
 		middleMouse = Input::GetState(sf::Mouse::Middle);
@@ -440,10 +440,10 @@ public:
 		//addGameObject(btn);
 		camera = (Camera&)sf::View(sf::FloatRect(0, 0, 480, 270));
 		camera.setFocused(player);
-		setCamera(&camera);
+		setCamera(camera);
 
 		GameObject* object = new GameObject();
-		object->setRelativeToView(false);
+		object->setUsingCamera(false);
 		sf::Sprite* spr = new sf::Sprite(*store.infoBar);
 		object->addGraphic(spr);
 		addGameObject(object);
@@ -458,8 +458,8 @@ private:
 
 public:
 	MainMenuState(const AssetStore& store, std::string name) : State(name) {
-		Camera* camera = new Camera(480, 270);
-		camera->setCenter(480 / 2, 270 / 2);
+		Camera camera = Camera(480, 270);
+		camera.setCenter(480 / 2, 270 / 2);
 		setCamera(camera);
 
 

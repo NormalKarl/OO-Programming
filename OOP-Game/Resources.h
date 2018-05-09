@@ -127,5 +127,8 @@ public:
 	ResourceManager();
 	~ResourceManager();
 
-	static void LoadTexture(std::string _key, std::string path);
+	static void LoadXMLList(std::string _path);
+	static void LoadTexture(std::string _key, std::string _path);
+	static void LoadBitmapFont(std::string _key, std::string _path);
+	static void LoadSprite(std::string _key, std::string _path);
 };

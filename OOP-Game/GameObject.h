@@ -32,7 +32,7 @@ private:
 	sf::Vector2f aabb;
 	sf::Vector2f aabbOrigin;
 
-	bool m_relativeToView;
+	bool m_usingCamera;
 
 	int m_depth;
 	bool m_persistent;
@@ -59,37 +59,21 @@ public:
 	virtual void update();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	inline bool isRelativeToView() {
-		return m_relativeToView;
-	}
+	inline bool isUsingCamera() { return m_usingCamera; }
 
-	inline void setRelativeToView(bool _relativeToView) {
-		this->m_relativeToView = _relativeToView;
-	}
+	inline void setUsingCamera(bool _relativeToView) { this->m_usingCamera = _relativeToView; }
 
-	inline bool isPersistent() const {
-		return m_persistent;
-	}
+	inline bool isPersistent() const { return m_persistent; }
 
-	inline void setPersistent(bool _persistent) {
-		m_persistent = _persistent;
-	}
+	inline void setPersistent(bool _persistent) { m_persistent = _persistent; }
 
-	inline bool isVisible() const {
-		return m_visible;
-	}
+	inline bool isVisible() const { return m_visible; }
 
-	inline void setVisible(bool _visible) {
-		m_visible = _visible;
-	}
+	inline void setVisible(bool _visible) { m_visible = _visible; }
 
-	inline int getDepth() const {
-		return m_depth;
-	}
+	inline int getDepth() const { return m_depth; }
 
-	inline State* getState() {
-		return m_state;
-	}
+	inline State* getState() { return m_state;  }
 
 	void setDepth(int depth);
 

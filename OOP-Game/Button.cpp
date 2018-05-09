@@ -17,7 +17,7 @@ Button::Button(float x, float y, const BitmapFont* font, std::string text)
 	addGraphic(&shape);
 	addGraphic(&m_label);
 
-	setRelativeToView(false);
+	setUsingCamera(false);
 }
 
 Button::Button(float x, float y, const SpriteSheet* sheet, std::string idle, std::string hover, std::string down, bool toggle)
@@ -39,7 +39,7 @@ Button::Button(float x, float y, const SpriteData* idle, const SpriteData* hover
 	setBoundingBox((float)idle->width, (float)idle->height);
 
 	setGraphic(idleSprite);
-	setRelativeToView(false);
+	setUsingCamera(false);
 
 	toggled = false;
 

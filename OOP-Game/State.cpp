@@ -24,11 +24,11 @@ sf::Vector2f Camera::mapDistance(sf::Vector2i pixelDistance) {
 State::State(std::string name) : m_name(name) {
 	m_game = NULL;
 
-	Camera* c = new Camera();
+	Camera c = Camera();
 	sf::Vector2f size = (sf::Vector2f)(Game::getGame()->getSize());
-	c->setCenter(sf::Vector2f((float)size.x / 2.0f, (float)size.y / 2.0f));
-	c->setSize(size);
-	m_cameras.push_back(c);
+	c.setCenter(sf::Vector2f((float)size.x / 2.0f, (float)size.y / 2.0f));
+	c.setSize(size);
+	setCamera(c);
 }
 
 State::~State()
@@ -48,9 +48,7 @@ void State::update() {
 		gameObject->update();
 	}
 
-	for (Camera* camera : m_cameras) {
-		camera->update();
-	}
+	m_camera.update();
 
 	if (m_pollOrder) {
 		pollOrder();
@@ -60,7 +58,7 @@ void State::update() {
 
 void State::draw(sf::RenderTarget& _target, sf::RenderStates _states) const {
 	_target.clear(m_clearColor);
-	_target.setView(getCamera());
+	_target.setView((sf::View&)m_camera);
 
 	for (GameObject* gameObject : m_gameObjects) {
 		_target.draw(*gameObject, _states);
@@ -72,14 +70,6 @@ void State::addGameObject(GameObject* object) {
 	m_gameObjects.push_back(object);
 }
 
-void State::setCamera(Camera* camera) {
-	if (m_cameras.empty())
-		m_cameras.resize(1);
-
-	camera->m_parent = this;
-	m_cameras[0] = camera;
-}
-
 void State::pollOrder() {
 	std::sort(m_gameObjects.begin(), m_gameObjects.end(),
 		[](const GameObject* a, const GameObject* b) {
@@ -87,11 +77,11 @@ void State::pollOrder() {
 		}
 	);
 
-	std::sort(m_cameras.begin(), m_cameras.end(),
+	/*std::sort(m_cameras.begin(), m_cameras.end(),
 		[](const Camera* a, const Camera* b) {
 			return a->getDepth() < b->getDepth();
 		}
-	);
+	);*/
 }
 
 void State::reorder() {

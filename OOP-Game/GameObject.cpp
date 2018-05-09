@@ -7,7 +7,7 @@
 GameObject::GameObject(bool _persistent) {
 	m_state = NULL;
 	m_parent = NULL;
-	m_relativeToView = true;
+	m_usingCamera = true;
 	m_depth = 0;
 	m_persistent = _persistent;
 	m_visible = true;
@@ -36,7 +36,7 @@ void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	if (m_visible) {
 		const sf::View& v = target.getView();
 
-		if (!m_relativeToView) {
+		if (!m_usingCamera) {
 			sf::View v2 = v;
 			v2.setCenter(v2.getSize() / 2.0f);
 			target.setView(v2);
@@ -52,7 +52,7 @@ void GameObject::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 			target.draw(*child, states);
 		}
 
-		if (!m_relativeToView) {
+		if (!m_usingCamera) {
 			target.setView(v);
 		}
 	}

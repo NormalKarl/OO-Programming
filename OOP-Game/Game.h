@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML\Graphics.hpp>
+#include <map>
 
 class State;
 class Input;
@@ -18,8 +19,11 @@ private:
 	//States
 	std::vector<State*> m_states;
 	State* m_state;
+
+	std::map<std::string, void*> m_resources;
 	
 	bool m_running;
+
 public:
 	Game(std::string _title, unsigned int _width, unsigned int _height);
 	~Game();
@@ -28,21 +32,10 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates state) const;
 	void start();
 
-	inline State* getState() {
-		return m_state;
-	}
-
-	inline const sf::View& getView() {
-		return m_window->getDefaultView();
-	}
-
-	inline sf::Vector2u getSize() {
-		return { m_videoMode.width, m_videoMode.height };
-	}
-
-	inline sf::RenderWindow* getWindow() {
-		return m_window;
-	}
+	inline State* getState() { return m_state; }
+	inline const sf::View& getView() { return m_window->getDefaultView(); }
+	inline sf::Vector2u getSize() { return { m_videoMode.width, m_videoMode.height }; }
+	inline sf::RenderWindow* getWindow() { return m_window; }
 
 	bool hasState(State* state);
 	bool hasState(std::string name);
@@ -53,9 +46,7 @@ public:
 	void removeState(std::string name);
 	float getDelta();
 
-	static Game* getGame() {
-		return s_game;
-	}
+	static Game* getGame() { return s_game; }
 };
 
 namespace IO {

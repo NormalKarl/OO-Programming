@@ -46,7 +46,7 @@ private:
 
 	std::string m_name;
 	std::vector<GameObject*> m_gameObjects;
-	std::vector<Camera*> m_cameras;
+	Camera m_camera;
 
 	sf::Color m_clearColor;
 
@@ -62,11 +62,10 @@ public:
 
 	inline Game* getGame() { return m_game; }
 	inline std::string getName() { return m_name; }
-	inline Camera& getCamera() const { return *m_cameras[0]; }
+	inline Camera& getCamera() { return m_camera; }
+	inline void setCamera(Camera camera) { this->m_camera = camera; }
 	inline sf::Color getClearColor() { return m_clearColor; }
 	inline void setClearColor(const sf::Color& clearColor) { m_clearColor = clearColor; }
-
-	void setCamera (Camera* camera);
 	void reorder();
 };
 
