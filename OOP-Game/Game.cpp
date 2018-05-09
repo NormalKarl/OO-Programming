@@ -150,3 +150,8 @@ void Game::removeState(std::string name) {
 float Game::getDelta() {
 	return 60.0f / 1000.0f;
 }
+
+
+void IO::Error(std::string _errorMessage) {
+	printf(("Error: " + _errorMessage).c_str());
+}

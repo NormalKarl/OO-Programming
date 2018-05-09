@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 #include <string>
 #include <SFML\Graphics.hpp>
 
@@ -115,4 +116,16 @@ public:
 
 	const SpriteData* getSpriteData(std::string name) const;
 	sf::Sprite* makeSprite(std::string name) const;
+};
+
+class ResourceManager
+{
+private:
+	std::map<std::string, void*> m_resources;
+public:
+	static ResourceManager* s_resourceManager;
+	ResourceManager();
+	~ResourceManager();
+
+	static void LoadTexture(std::string _key, std::string path);
 };

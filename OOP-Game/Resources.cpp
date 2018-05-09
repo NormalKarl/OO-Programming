@@ -5,6 +5,7 @@
 #include <string>
 
 #include "tinyxml2.h"
+#include "Game.h"
 
 BitmapFont::BitmapFont(const char* filename, std::vector<std::string> pagePaths) {
 	//Fill chars array with empty BitmapChar objects.
@@ -176,3 +177,27 @@ SpriteSheet::~SpriteSheet() {
 		rasterizer->drawQuad(vertices[0], vertices[1], vertices[2], vertices[3]);
 	}
 }*/
+
+ResourceManager* ResourceManager::s_resourceManager = nullptr;
+
+ResourceManager::ResourceManager() {
+	if (s_resourceManager == nullptr)
+		s_resourceManager = this;
+}
+
+ResourceManager::~ResourceManager() {
+	if (s_resourceManager == this)
+		s_resourceManager = nullptr;
+}
+
+void ResourceManager::LoadTexture(std::string _key, std::string path) {
+	sf::Texture* texture = new sf::Texture();
+
+	if (!texture->loadFromFile(path)) {
+		IO::Error("Unable to load texture with the path of '" + path + "'!");
+		delete texture;
+		return;
+	}
+
+
+}

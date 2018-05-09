@@ -60,25 +60,11 @@ public:
 
 	void addGameObject(GameObject* object);
 
-	inline Game* getGame() {
-		return m_game;
-	}
-
-	inline std::string getName() {
-		return m_name;
-	}
-
-	inline Camera& getCamera() const {
-		return *m_cameras[0];
-	}
-
-	inline sf::Color getClearColor() {
-		return m_clearColor;
-	}
-
-	inline void setClearColor(const sf::Color& clearColor) {
-		m_clearColor = clearColor;
-	}
+	inline Game* getGame() { return m_game; }
+	inline std::string getName() { return m_name; }
+	inline Camera& getCamera() const { return *m_cameras[0]; }
+	inline sf::Color getClearColor() { return m_clearColor; }
+	inline void setClearColor(const sf::Color& clearColor) { m_clearColor = clearColor; }
 
 	void setCamera (Camera* camera);
 	void reorder();

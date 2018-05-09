@@ -58,3 +58,6 @@ public:
 	}
 };
 
+namespace IO {
+	void Error(std::string _errorMessage);
+}
