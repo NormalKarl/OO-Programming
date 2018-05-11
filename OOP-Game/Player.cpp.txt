@@ -1,4 +1,4 @@
-#include "Player.h"
+//#include "Player.h"
 #include "Input.h"
 #include "TileMap.h"
 #include "Graphics.h"
@@ -26,9 +26,9 @@ struct Flags
 //Player
 Player::Player(TileMap* map) {
 	this->map = map;
-	jump = Input::GetState(sf::Keyboard::Key::Space);
-	right = Input::GetState(sf::Keyboard::Key::Right);
-	left = Input::GetState(sf::Keyboard::Key::Left);
+	jump = Input::getInstance().getState(sf::Keyboard::Key::Space);
+	right = Input::getInstance().getState(sf::Keyboard::Key::Right);
+	left = Input::getInstance().getState(sf::Keyboard::Key::Left);
 	size = vel = { 0, 0 };
 	shape = sf::RectangleShape({ 16, 32 });
 	hitbox = { 16.0f, 32.0f };

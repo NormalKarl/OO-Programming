@@ -3,31 +3,19 @@
 #include "Input.h"
 #include "State.h"
 
-Game* Game::s_game = NULL;
+Game* Game::s_instance = nullptr;
 
-Game::Game(std::string _title, unsigned int _width, unsigned int _height) {
-	m_title = _title;
-	m_videoMode = sf::VideoMode(_width, _height);
+Game::Game() {
+	m_title = "Game Window";
+	m_videoMode = sf::VideoMode(640, 480);
 	m_running = false;
-	m_input = new Input(this);
-	s_game = this;
+	s_instance = this;
 
-	m_state = NULL;
+	m_state = nullptr;
 }
 
 Game::~Game() {
 	delete m_window;
-	delete m_input;
-}
-
-void Game::update() {
-	if (m_state != NULL)
-		m_state->update();
-}
-
-void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	if (m_state != NULL)
-		target.draw(*m_state, states);
 }
 
 void Game::start() {
@@ -36,10 +24,12 @@ void Game::start() {
 	m_window->setVerticalSyncEnabled(true);
 	m_window->setKeyRepeatEnabled(false);
 	m_running = true;
-	m_input->clear();
+
+	Input& input = Input::getInstance();
+	input.clear();
 
 	while (m_running) {
-		m_input->updateStates();
+		input.updateStates();
 
 		sf::Event e;
 
@@ -57,7 +47,7 @@ void Game::start() {
 				case sf::Event::MouseMoved:
 				case sf::Event::MouseEntered:
 				case sf::Event::MouseLeft:
-					m_input->event(e);
+					input.event(e);
 					break;
 				/*case sf::Event::TextEntered:
 					printf("%c", e.text.unicode);
@@ -65,9 +55,14 @@ void Game::start() {
 			}
 		}
 
-		update();
+		if (m_state != nullptr)
+			m_state->update();
+
 		m_window->clear();
-		m_window->draw(*this);
+
+		if (m_state != nullptr)
+			m_window->draw(*m_state);
+
 		m_window->display();
 
 		if (!m_running) {
@@ -92,22 +87,19 @@ bool Game::hasState(std::string name) {
 void Game::addState(State* state) {
 	if (!hasState(state)) {
 		m_states.push_back(state);
-		state->m_game = this;
 
-		if (m_state == NULL) {
+		if (m_state == nullptr) {
 			m_state = state;
-			printf("Info: Current state has not been set. Setting using parsed State.\n");
 		}
 
 		return;
 	}
 
-	printf("Error: State already exists.\n");
+	IO::Error("State already exists.");
 }
 
 void Game::setState(State* state) {
 	if (!hasState(state)) {
-		printf("Warning: State doesn't already exist in Game. Adding...\n");
 		m_states.push_back(state);
 	}
 
@@ -122,7 +114,7 @@ void Game::setState(std::string name) {
 		}
 	}
 
-	printf("Error: Couldn't find state with the name '%s'\n", name.c_str());
+	IO::Error("Couldn't find state with the name '" + name + "'");
 }
 
 void Game::removeState(State* state) {
@@ -133,7 +125,7 @@ void Game::removeState(State* state) {
 		}
 	}
 
-	printf("Error: Couldn't remove state.\n");
+	IO::Error("Couldn't remove state.");
 }
 
 void Game::removeState(std::string name) {
@@ -144,14 +136,21 @@ void Game::removeState(std::string name) {
 		}
 	}
 
-	printf("Error: Couldn't remove state with the name '%s'\n", name.c_str());
+	IO::Error("Couldn't remove state with the name '" + name + "'");
 }
 
 float Game::getDelta() {
-	return 60.0f / 1000.0f;
+	return 1.0f / 60.0f;
 }
 
 
 void IO::Error(std::string _errorMessage) {
-	printf(("Error: " + _errorMessage).c_str());
+	printf(("Error: " + _errorMessage + "\n").c_str());
+}
+
+Game& Game::getInstance() {
+	if (s_instance == nullptr)
+		s_instance = new Game();
+
+	return *s_instance;
 }

@@ -6,30 +6,30 @@
 class State;
 class Input;
 
-class Game : public sf::Drawable
+class Game
 {
 private:
-	static Game* s_game;
+	static Game* s_instance;
 
 	//Window Objects
 	sf::RenderWindow* m_window;
 	sf::VideoMode m_videoMode;
 	std::string m_title;
-	Input* m_input;
 	//States
 	std::vector<State*> m_states;
 	State* m_state;
-
-	std::map<std::string, void*> m_resources;
-	
 	bool m_running;
 
-public:
-	Game(std::string _title, unsigned int _width, unsigned int _height);
+	Game();
 	~Game();
+	Game(const Game& copy) {}
+	void operator=(const Game& value) {}
+public:
 
-	void update();
-	void draw(sf::RenderTarget& target, sf::RenderStates state) const;
+	inline std::string getTitle() { return m_title; }
+	inline void setTitle(std::string _title) { m_title = _title; }
+	inline void setSize(unsigned int _width, unsigned int _height) { m_videoMode = sf::VideoMode(_width, _height); }
+
 	void start();
 
 	inline State* getState() { return m_state; }
@@ -46,7 +46,7 @@ public:
 	void removeState(std::string name);
 	float getDelta();
 
-	static Game* getGame() { return s_game; }
+	static Game& getInstance();
 };
 
 namespace IO {

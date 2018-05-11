@@ -4,14 +4,9 @@
 
 class BitmapFont;
 
-class Updatable {
+class Graphic : public sf::Transformable, public sf::Drawable {
 public:
-	virtual void update() = 0;
-};
-
-class Graphic : public sf::Transformable, public sf::Drawable, public Updatable {
-public:
-	virtual void update() = 0;
+	virtual void update() {}
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 };
 
@@ -32,42 +27,19 @@ class Label : public Graphic {
 private:
 	const BitmapFont* font;
 	sf::VertexArray va;
-	std::string text;
+	std::string m_text;
 	sf::Vector2f m_labelSize;
 public:
 	Label() {}
 	Label(const BitmapFont* font, std::string text);
 	virtual ~Label();
 
-	inline std::string getText() const {
-		return text;
-	}
-
-	inline float getLabelWidth() {
-		return m_labelSize.x;
-	}
-
-	inline float getLabelHeight() {
-		return m_labelSize.y;
-	}
-
-	inline sf::Vector2f getLabelSize() {
-		return m_labelSize;
-	}
-
+	inline std::string getText() const { return m_text; }
 	void setText(std::string text);
-	virtual void update();
+
+	inline float getLabelWidth() { return m_labelSize.x; }
+	inline float getLabelHeight() { return m_labelSize.y; }
+	inline sf::Vector2f getLabelSize() { return m_labelSize; }
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
-
-/*class TileMap : public sf::Transformable, public sf::Drawable {
-private:
-	const sf::Texture* texture;
-	sf::VertexArray mapVA;
-	int mapWidth;
-	int mapHeight;
-public:
-	TileMap(const sf::Texture* texture);
-	~TileMap();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-};*/

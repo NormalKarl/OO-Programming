@@ -35,18 +35,22 @@ public:
 class Input
 {
 private:
-	static Input* s_input;
+	static Input* s_instance;
 
-	const Game* m_parent;
 	InputState m_keyStates[sf::Keyboard::KeyCount];
 	InputState m_buttonStates[sf::Mouse::ButtonCount];
 	sf::Vector2i mousePos;
 	sf::Vector2i mouseDelta;
 	int mouseWheel;
 	int mouseWheelDelta;
-public:
-	Input(const Game* _parent);
+
+	Input();
 	~Input() {}
+	Input(const Input& copy) {}
+	void operator=(const Input& value) {}
+
+
+public:
 	void clear();
 	void updateStates();
 	void event(sf::Event event);
@@ -60,11 +64,13 @@ public:
 	inline bool down(sf::Mouse::Button button) { return m_buttonStates[button].down(); }
 	inline bool released(sf::Mouse::Button button) { return m_buttonStates[button].released(); }
 	inline bool up(sf::Mouse::Button button) { return m_buttonStates[button].up(); }
-	inline static Input& GetInput() { return *Input::s_input; }
+	inline sf::Vector2i getMousePos() { return mousePos; }
+	static Input& getInstance();
+	/*inline static Input& GetInput() { return *Input::s_input; }
 	inline static const InputState* Input::GetState(sf::Keyboard::Key key) { return &(GetInput().m_keyStates[key]); }
 	inline static const InputState* Input::GetState(sf::Mouse::Button button) { return &(GetInput().m_buttonStates[button]); }
 	inline static sf::Vector2i GetMousePos() { return s_input->mousePos; }
 	inline static sf::Vector2i GetMouseDelta() { return s_input->mouseDelta; }
 	inline static int GetMouseX() { return s_input->mousePos.x; }
-	inline static int GetMouseY() { return s_input->mousePos.y; }
+	inline static int GetMouseY() { return s_input->mousePos.y; }*/
 };

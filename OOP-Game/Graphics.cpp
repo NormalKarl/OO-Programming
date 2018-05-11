@@ -10,7 +10,7 @@ Animation::Animation(const sf::Texture* texture, std::vector<sf::IntRect> frames
 
 void Animation::update() {
 	if (m_playing && m_speed != 0) {
-		m_elapsed += Game::getGame()->getDelta();
+		m_elapsed += Game::getInstance().getDelta();
 
 		if (m_elapsed >= m_speed * m_frames.size()) {
 			m_elapsed -= m_speed * m_frames.size();
@@ -62,10 +62,6 @@ void Label::setText(std::string text)  {
 	}
 
 	m_labelSize = { currentX, (float)font->getLineHeight() };
-}
-
-void Label::update() {
-
 }
 
 void Label::draw(sf::RenderTarget& target, sf::RenderStates states) const {

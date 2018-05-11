@@ -8,47 +8,16 @@
 
 class Game;
 
-class Camera : public sf::View {
-private:
-	friend class State;
-	State* m_parent;
-	const GameObject* m_focused;
-
-	int m_depth;
-public:
-	Camera() : sf::View() {}
-	Camera(float width, float height) : sf::View({width / 2, height / 2}, { width, height }) {}
-	Camera(const GameObject* _focused) : sf::View(), m_focused(_focused) {}
-
-	void update();
-
-	inline const GameObject* getFocused() {
-		return m_focused;
-	}
-
-	inline void setFocused(const GameObject* _focused) {
-		m_focused = _focused;
-	}
-
-	sf::Vector2f mapPixelToCoords(sf::Vector2i mousePos);
-	sf::Vector2f Camera::mapDistance(sf::Vector2i pixelDistance);
-
-	inline int getDepth() const {
-		return m_depth;
-	}
-};
-
 class State : public sf::Drawable
 {
 private:
 	friend class Game;
-	Game* m_game;
 
 	std::string m_name;
+	sf::View m_camera;
+	sf::Color m_backgroundColour;
 	std::vector<GameObject*> m_gameObjects;
-	Camera m_camera;
 
-	sf::Color m_clearColor;
 
 	bool m_pollOrder;
 	void pollOrder();
@@ -57,16 +26,17 @@ public:
 	virtual ~State();
 	virtual void update();
 	virtual void draw(sf::RenderTarget& _target, sf::RenderStates _states) const;
-
-	void addGameObject(GameObject* object);
-
-	inline Game* getGame() { return m_game; }
-	inline std::string getName() { return m_name; }
-	inline Camera& getCamera() { return m_camera; }
-	inline void setCamera(Camera camera) { this->m_camera = camera; }
-	inline sf::Color getClearColor() { return m_clearColor; }
-	inline void setClearColor(const sf::Color& clearColor) { m_clearColor = clearColor; }
 	void reorder();
+
+	sf::Vector2f map(sf::Vector2i _pixel);
+
+	void add(GameObject* object);
+
+	inline std::string getName() { return m_name; }
+	inline sf::View& getCamera() { return m_camera; }
+	inline void setCamera(const sf::View& _camera) { this->m_camera = _camera; }
+	inline sf::Color getBackgroundColour() { return m_backgroundColour; }
+	inline void setBackgroundColour(const sf::Color& _backgroundColour) { m_backgroundColour = _backgroundColour; }
 };
 
 

@@ -1,7 +1,7 @@
 #include "Input.h"
 #include "Game.h"
 
-Input* Input::s_input = NULL;
+Input* Input::s_instance = nullptr;
 
 void InputState::update() {
 	if (pressed()) {
@@ -11,9 +11,7 @@ void InputState::update() {
 	}
 }
 
-Input::Input(const Game* _parent) : m_parent(_parent) {
-	s_input = this;
-	clear();
+Input::Input() {
 }
 
 void Input::clear() {
@@ -55,4 +53,11 @@ void Input::event(sf::Event e) {
 			mouseDelta = mousePos - tempMousePos;
 			break;
 	}
+}
+
+Input& Input::getInstance() {
+	if (s_instance == nullptr)
+		s_instance = new Input();
+
+	return *s_instance;
 }

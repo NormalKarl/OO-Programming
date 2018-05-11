@@ -1,42 +1,13 @@
 #include "State.h"
 #include "Game.h"
 
-void Camera::update() {
-	if(m_focused != NULL)
-		setCenter(m_focused->getPosition());
-
-	return;
-}
-
-sf::Vector2f Camera::mapPixelToCoords(sf::Vector2i mousePos) {
-	m_parent->getGame()->getWindow()->setView(*this);
-	return m_parent->getGame()->getWindow()->mapPixelToCoords(mousePos);
-}
-
-sf::Vector2f Camera::mapDistance(sf::Vector2i pixelDistance) {
-	sf::Vector2f ndc;
-	ndc.x = (float)getSize().x / (float)m_parent->getGame()->getWindow()->getSize().x;
-	ndc.y = (float)getSize().y / (float)m_parent->getGame()->getWindow()->getSize().y;
-
-	return sf::Vector2f((float)pixelDistance.x * ndc.x, (float)pixelDistance.y * ndc.y);
-}
-
 State::State(std::string name) : m_name(name) {
-	m_game = NULL;
-
-	Camera c = Camera();
-	sf::Vector2f size = (sf::Vector2f)(Game::getGame()->getSize());
-	c.setCenter(sf::Vector2f((float)size.x / 2.0f, (float)size.y / 2.0f));
-	c.setSize(size);
-	setCamera(c);
+	sf::Vector2f size =  (sf::Vector2f) Game::getInstance().getSize();
+	setCamera(sf::View({0, 0, size.x, size.y}));
 }
 
 State::~State()
 {
-	if (m_game != NULL) {
-		m_game->removeState(this);
-	}
-
 	for (size_t i = 0; i < m_gameObjects.size(); i++) {
 		if (!m_gameObjects[i]->isPersistent())
 			delete m_gameObjects[i];
@@ -48,7 +19,11 @@ void State::update() {
 		gameObject->update();
 	}
 
-	m_camera.update();
+	for (GameObject* gameObject : m_gameObjects) {
+		if (gameObject->m_destroy) {
+			m_gameObjects.erase(std::remove(m_gameObjects.begin(), m_gameObjects.end(), gameObject));
+		}
+	}
 
 	if (m_pollOrder) {
 		pollOrder();
@@ -57,7 +32,7 @@ void State::update() {
 }
 
 void State::draw(sf::RenderTarget& _target, sf::RenderStates _states) const {
-	_target.clear(m_clearColor);
+	_target.clear(m_backgroundColour);
 	_target.setView((sf::View&)m_camera);
 
 	for (GameObject* gameObject : m_gameObjects) {
@@ -65,7 +40,19 @@ void State::draw(sf::RenderTarget& _target, sf::RenderStates _states) const {
 	}
 }
 
-void State::addGameObject(GameObject* object) {
+sf::Vector2f State::map(sf::Vector2i _pixel) {
+	sf::RenderWindow* window = Game::getInstance().getWindow();
+
+	sf::View view = window->getView();
+	window->setView(m_camera);
+
+	sf::Vector2f position = window->mapPixelToCoords(_pixel);
+	window->setView(view);
+
+	return position;
+}
+
+void State::add(GameObject* object) {
 	object->m_state = this;
 	m_gameObjects.push_back(object);
 }
@@ -76,12 +63,6 @@ void State::pollOrder() {
 			return a->getDepth() < b->getDepth();
 		}
 	);
-
-	/*std::sort(m_cameras.begin(), m_cameras.end(),
-		[](const Camera* a, const Camera* b) {
-			return a->getDepth() < b->getDepth();
-		}
-	);*/
 }
 
 void State::reorder() {

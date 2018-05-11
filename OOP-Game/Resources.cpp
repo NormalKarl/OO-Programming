@@ -178,26 +178,157 @@ SpriteSheet::~SpriteSheet() {
 	}
 }*/
 
-ResourceManager* ResourceManager::s_resourceManager = nullptr;
+ResourceFactory* ResourceFactory::s_instance = nullptr;
 
-ResourceManager::ResourceManager() {
-	if (s_resourceManager == nullptr)
-		s_resourceManager = this;
-}
-
-ResourceManager::~ResourceManager() {
-	if (s_resourceManager == this)
-		s_resourceManager = nullptr;
-}
-
-void ResourceManager::LoadTexture(std::string _key, std::string path) {
-	sf::Texture* texture = new sf::Texture();
-
-	if (!texture->loadFromFile(path)) {
-		IO::Error("Unable to load texture with the path of '" + path + "'!");
-		delete texture;
-		return;
+ResourceFactory::ResourceEntry* ResourceFactory::find(std::string _key) {
+	for (ResourceEntry* m_resource : m_resources) {
+		if (m_resource->m_key == _key)
+			return m_resource;
 	}
 
+	return nullptr;
+}
 
+bool ResourceFactory::isKeyValid(std::string _key) {
+	return _key != "" && find(_key) == nullptr;
+}
+ 
+bool ResourceFactory::keyCheck(std::string _key) {
+	if (isKeyValid(_key)) {
+		return true;
+	}
+	else {
+		IO::Error("Key '" + _key + "' is either invalid or already taken.");
+		return false;
+	}
+}
+
+bool ResourceFactory::keyExists(std::string _key) {
+	if (find(_key) == nullptr) {
+		IO::Error("Key '" + _key + "' doesn't exist!");
+		return false;
+	}
+
+	return true;
+}
+
+//void ResourceManager::loadDictionary(std::string _dictionaryPath) {}
+
+void ResourceFactory::loadTexture(std::string _key, std::string path) {
+	if (keyCheck(_key)) {
+		sf::Texture* texture = new sf::Texture();
+
+		if (!texture->loadFromFile(path)) {
+			IO::Error("Unable to load texture with the path of '" + path + "'!");
+			delete texture;
+			return;
+		}
+
+		m_resources.push_back(new ResourceEntry(_key, ResourceEntry::EntryType::Texture, texture));
+	}
+}
+
+void ResourceFactory::loadBitmapFont(std::string _key, std::string _fontXML, std::string _pagePath) {
+	if (keyCheck(_key)) {
+		BitmapFont* m_font = new BitmapFont(_fontXML.c_str(), { _pagePath });
+		m_resources.push_back(new ResourceEntry(_key, ResourceEntry::EntryType::BitmapFont, m_font));
+	}
+}
+
+void ResourceFactory::loadSprite(std::string _key, std::string _textureKey, int _x, int _y, int _width, int _height, float _originX, float _originY) {
+	loadSprite(_key, _textureKey, { _x, _y, _width, _height }, { _originX, _originY });
+}
+void ResourceFactory::loadSprite(std::string _key, std::string _textureKey, sf::IntRect _region, sf::Vector2f _origin){
+	if (keyCheck(_key)) {
+		sf::Texture* tex = getTexture(_textureKey);
+
+		if (tex != nullptr) {
+			SpriteData* sprite = new SpriteData();
+			sprite->rect = _region;
+			sprite->origin = _origin;
+			m_resources.push_back(new ResourceEntry(_key, ResourceEntry::EntryType::Sprite, sprite));
+		}
+	}
+}
+
+void ResourceFactory::loadMusic(std::string _key, std::string _musicPath) {
+	if (keyCheck(_key)) {
+		sf::Music* music = new sf::Music();
+
+		if (!music->openFromFile(_musicPath)) {
+			IO::Error("Unable to load texture with the path of '" + _musicPath + "'!");
+			delete music;
+			return;
+		}
+
+		m_resources.push_back(new ResourceEntry(_key, ResourceEntry::EntryType::Music, music));
+	}
+}
+
+void ResourceFactory::loadSound(std::string _key, std::string _sfxPath) {
+	if (keyCheck(_key)) {
+		sf::SoundBuffer* buffer = new sf::SoundBuffer();
+
+		if (!buffer->loadFromFile(_sfxPath)) {
+			IO::Error("Unable to load texture with the path of '" + _sfxPath + "'!");
+			delete buffer;
+			return;
+		}
+
+		m_resources.push_back(new ResourceEntry(_key, ResourceEntry::EntryType::Sound, buffer));
+	}
+}
+
+sf::Texture* ResourceFactory::getTexture(std::string _key) {
+	return check<sf::Texture>(_key, ResourceEntry::EntryType::Texture);
+}
+
+BitmapFont* ResourceFactory::getBitmapFont(std::string _key) {
+	return check<BitmapFont>(_key, ResourceEntry::EntryType::BitmapFont);
+}
+
+SpriteData* ResourceFactory::getSprite(std::string _key) {
+	return check<SpriteData>(_key, ResourceEntry::EntryType::Sprite);
+}
+
+sf::Music* ResourceFactory::getMusic(std::string _key) {
+	return check<sf::Music>(_key, ResourceEntry::EntryType::Music);
+}
+
+sf::SoundBuffer* ResourceFactory::getSound(std::string _key) {
+	return check<sf::SoundBuffer>(_key, ResourceEntry::EntryType::Sound);
+}
+
+sf::Sprite* ResourceFactory::makeSFMLSprite(std::string _key) {
+	sf::Sprite* sprite = new sf::Sprite();
+
+	if (keyExists(_key)) {
+		if (sf::Texture* texture = check<sf::Texture>(_key, ResourceEntry::EntryType::Texture)) {
+			sprite->setTexture(*texture, true);
+		} else if (SpriteData* data = check<SpriteData>(_key, ResourceEntry::EntryType::Sprite)) {
+			sprite->setTexture(*data->m_texture);
+			sprite->setTextureRect(data->rect);
+		} else {
+			delete sprite;
+			IO::Error("Key '" + _key + "' is not a Texture or Sprite entry.");
+			return nullptr;
+		}
+
+	}
+
+	return sprite;
+}
+
+void ResourceFactory::clear() {
+	for (ResourceEntry* resource : m_resources) {
+		delete resource->m_ptr;
+		delete resource;
+	}
+}
+
+ResourceFactory& ResourceFactory::getInstance() {
+	if (s_instance == nullptr)
+		s_instance = new ResourceFactory();
+
+	return *s_instance;
 }

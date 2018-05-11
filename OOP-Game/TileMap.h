@@ -51,7 +51,7 @@ public:
 	}
 
 	inline sf::FloatRect TileMap::getTileBounds(int tileX, int tileY) {
-		return { tileX * tileSize, tileY * tileSize, tileSize, tileSize };
+		return { getPosition().x + (tileX * tileSize), getPosition().y + (tileY * tileSize), tileSize, tileSize };
 	}
 
 	inline float getTileSize() {

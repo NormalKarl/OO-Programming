@@ -16,3 +16,84 @@
 			m_pallete[((y * noX) + x * 4) + 3] = { { (float)x + (x * m_cellSize), (float)y + ((y * m_cellSize) + m_cellSize) },{ (float)x * m_cellSize, (float)(y * m_cellSize) + m_cellSize } };
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+class Camera : public sf::View {
+private:
+	friend class State;
+	State* m_parent;
+	const GameObject* m_focused;
+
+	int m_depth;
+public:
+	inline Camera() : sf::View() {
+		m_focused = nullptr;
+		m_depth = 0;
+	}
+	inline Camera(float width, float height) : sf::View({width / 2, height / 2}, { width, height }) {
+		m_focused = nullptr;
+		m_depth = 0;
+	}
+	inline Camera(const GameObject* _focused) : sf::View(), m_focused(_focused) {
+		m_focused = nullptr;
+		m_depth = 0;
+	}
+
+	void update();
+
+	inline const GameObject* getFocused() {
+		return m_focused;
+	}
+
+	inline void setFocused(const GameObject* _focused) {
+		m_focused = _focused;
+	}
+
+	sf::Vector2f mapPixelToCoords(sf::Vector2i mousePos);
+	sf::Vector2f Camera::mapDistance(sf::Vector2i pixelDistance);
+
+	inline int getDepth() const {
+		return m_depth;
+	}
+};
+
+void Camera::update() {
+	if (m_focused != NULL)
+		setCenter(m_focused->getPosition());
+}
+
+sf::Vector2f Camera::mapPixelToCoords(sf::Vector2i mousePos) {
+	Game::getInstance().getWindow()->setView(*this);
+	return Game::getInstance().getWindow()->mapPixelToCoords(mousePos);
+}
+
+sf::Vector2f Camera::mapDistance(sf::Vector2i pixelDistance) {
+	sf::Vector2f ndc;
+	ndc.x = (float)getSize().x / (float)Game::getInstance().getWindow()->getSize().x;
+	ndc.y = (float)getSize().y / (float)Game::getInstance().getWindow()->getSize().y;
+
+	return sf::Vector2f((float)pixelDistance.x * ndc.x, (float)pixelDistance.y * ndc.y);
+}

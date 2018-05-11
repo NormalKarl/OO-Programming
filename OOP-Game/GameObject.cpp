@@ -3,14 +3,20 @@
 #include "TileMap.h"
 #include "Graphics.h"
 #include "State.h"
+#include "Resources.h"
 
-GameObject::GameObject(bool _persistent) {
+GameObject::GameObject() {
 	m_state = NULL;
 	m_parent = NULL;
 	m_usingCamera = true;
 	m_depth = 0;
-	m_persistent = _persistent;
+	m_persistent = false;
 	m_visible = true;
+	m_destroy = false;
+}
+
+GameObject::GameObject(std::string _graphicKey) : GameObject() {
+	setGraphic(ResourceFactory::getInstance().makeSFMLSprite(_graphicKey));
 }
 
 GameObject::~GameObject() {
@@ -124,4 +130,8 @@ void GameObject::setDepth(int depth) {
 	if (m_state != NULL) {
 		m_state->reorder();
 	}
+}
+
+void GameObject::destroy() {
+	m_destroy = true;
 }

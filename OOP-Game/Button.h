@@ -85,5 +85,4 @@ public:
 
 	void select(Button* button);
 	Button* getSelected();
-
 };

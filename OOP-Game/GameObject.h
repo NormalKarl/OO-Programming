@@ -37,8 +37,10 @@ private:
 	int m_depth;
 	bool m_persistent;
 	bool m_visible;
+	bool m_destroy;
 public:
-	GameObject(bool _persistent = false);
+	GameObject();
+	GameObject(std::string _graphicKey);
 	virtual ~GameObject();
 
 	//Returned the first graphic.
@@ -58,24 +60,17 @@ public:
 	virtual bool intersect(sf::Vector2i point);
 	virtual void update();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void destroy();
 
 	inline bool isUsingCamera() { return m_usingCamera; }
-
 	inline void setUsingCamera(bool _relativeToView) { this->m_usingCamera = _relativeToView; }
-
 	inline bool isPersistent() const { return m_persistent; }
-
 	inline void setPersistent(bool _persistent) { m_persistent = _persistent; }
-
 	inline bool isVisible() const { return m_visible; }
-
 	inline void setVisible(bool _visible) { m_visible = _visible; }
-
 	inline int getDepth() const { return m_depth; }
-
 	inline State* getState() { return m_state;  }
-
 	void setDepth(int depth);
-
 	sf::Vector2f getGlobalPosition();
+
 };

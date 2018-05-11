@@ -52,10 +52,10 @@ Button::~Button()
 }
 
 void Button::update() {
-	bool i = intersect(getState()->getCamera().mapDistance(Input::GetMousePos()));
+	bool i = intersect(getState()->map(Input::getInstance().getMousePos()));
 
 	if (i) {
-		if (Input::GetState(sf::Mouse::Button::Left)->pressed()) {
+		if (Input::getInstance().getState(sf::Mouse::Button::Left)->pressed()) {
 			setGraphic(downSprite);
 			state = Clicked;
 
@@ -70,7 +70,7 @@ void Button::update() {
 				buttonGroup->select(this);
 			}
 		}
-		else if (Input::GetState(sf::Mouse::Button::Left)->down()) {
+		else if (Input::getInstance().getState(sf::Mouse::Button::Left)->down()) {
 			setGraphic(downSprite);
 			state = Helt;
 		}
