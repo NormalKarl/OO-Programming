@@ -175,13 +175,25 @@ public:
 		State::update();
 
 		if (Input::getInstance().getState(sf::Mouse::Button::Left)->pressed()) {
-			Ball* ball = new Ball({ (rand() % 100) * 0.01f, (rand() % 100) * 0.01f }, m_map);
+			Gun* gun = new Gun();
 
-			ball->setPosition(map(Input::getInstance().getMousePos()));
+			sf::Vector2f a = map(Input::getInstance().getMousePos()) - m_map->getPosition();
+
+			a /= (float)m_map->getCellSize();
+
+			a.x = floor(a.x);
+			a.y = floor(a.y);
+			a *= (float)m_map->getCellSize();
+
+			gun->setPosition(a);
+			add(gun);
+			/*Ball* ball = new Ball({ (rand() % 100) * 0.01f, (rand() % 100) * 0.01f }, m_map);
+
+			ball->setPosition();
 			
 
 			m_activeBalls.push_back(ball);
-			add(ball);
+			add(ball);*/
 		}
 	}
 

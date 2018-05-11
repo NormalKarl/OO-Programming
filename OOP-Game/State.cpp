@@ -19,9 +19,15 @@ void State::update() {
 		gameObject->update();
 	}
 
-	for (GameObject* gameObject : m_gameObjects) {
-		if (gameObject->m_destroy) {
-			m_gameObjects.erase(std::remove(m_gameObjects.begin(), m_gameObjects.end(), gameObject));
+	for (std::vector<GameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end();) {
+		if ((*it)->m_destroy) {
+			if ((*it)->m_persistent == false) {
+				delete *it;
+			}
+
+			it = m_gameObjects.erase(it);
+		} else {
+			it++;
 		}
 	}
 

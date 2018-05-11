@@ -6,6 +6,11 @@
 class State;
 class Input;
 
+/*
+Game is a Singleton accessed through getInstance().
+Here you can set the title, size and state of the current window,
+as well as add and set states, and start and stop the main game loop.
+*/
 class Game
 {
 private:
